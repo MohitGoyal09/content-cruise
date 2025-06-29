@@ -1,17 +1,117 @@
-research_task:
+campaign_management_task:
   description: >
-    Conduct a thorough research about {topic}
-    Make sure you find any interesting and relevant information given
-    the current year is {current_year}.
-  expected_output: >
-    A list with 10 bullet points of the most relevant information about {topic}
-  agent: researcher
+    As the Campaign Manager, your task is to coordinate the entire content marketing workflow
+    according to our established process. You will:
 
-reporting_task:
-  description: >
-    Review the context you got and expand each topic into a full section for a report.
-    Make sure the report is detailed and contains any and all relevant information.
+    1. Initiate the market research phase by delegating to the Market Strategist
+    2. Review the strategic brief and delegate content creation to the Content Creator
+    3. Send the draft content to the Review Agent for quality assurance
+    4. If revisions are needed, coordinate between Content Creator and Review Agent
+    5. Once approved, delegate formatting to the Content Director
+    6. After publication, request performance analysis from the Performance Agent
+    7. Based on performance data, decide whether to:
+       - Consider the campaign successful if goals are met
+       - Request specific optimizations if minor improvements are needed
+       - Restart the process if major changes are required
+
+    Your role is to make strategic decisions at each step and ensure the workflow
+    proceeds efficiently. The topic for this campaign is: '{topic}'.
   expected_output: >
-    A fully fledged report with the main topics, each with a full section of information.
-    Formatted as markdown without '```'
-  agent: reporting_analyst
+    A comprehensive report detailing the entire campaign process, decisions made at
+    each stage, and final outcomes. Include recommendations for future campaigns
+    based on what worked well and what could be improved.
+  agent: campaign_manager
+
+market_research_task:
+  description: >
+    Conduct a comprehensive market analysis for the topic: '{topic}'.
+    Your final report should be a detailed brief for the content creation team.
+    Use your suite of research tools to gather data. The current year is {current_year}.
+
+    The analysis must include:
+    1.  **Top 3 Competitors:** Identify who they are and summarize their content strategy.
+    2.  **Trending Topics & Angles:** What are the current hot-button issues and rising trends?
+    3.  **Content Gaps:** What important sub-topics are competitors NOT covering?
+    4.  **Target Audience Profile:** Describe the ideal reader for this content.
+    5.  **SEO Keywords:** A list of 10-15 primary and secondary keywords.
+  expected_output: >
+    A structured markdown document containing the full strategic brief with clear
+    sections for Competitor Analysis, Trending Topics, Content Gaps, Audience
+    Profile, and SEO Keywords.
+  agent: market_strategist
+
+content_creation_task:
+  description: >
+    Using the strategic brief provided in the context, write a comprehensive and
+    engaging blog post on the topic of '{topic}'. The article should be at least
+    700 words.
+
+    Ensure you:
+    - Target the audience profile defined in the brief.
+    - Naturally integrate the recommended SEO keywords.
+    - Write in a tone that is both informative and captivating.
+    - Structure the article with a clear introduction, body, and conclusion.
+  expected_output: >
+    The full text of a well-written, 700+ word blog post in markdown format.
+    The article should be ready for the editing phase.
+  agent: content_creator
+
+content_review_task:
+  description: >
+    Review the blog post provided in the context. Perform a meticulous edit to
+    ensure it is perfect and ready for publishing.
+
+    Your review process must include:
+    - **Proofreading:** Correct all spelling and grammatical errors.
+    - **Clarity & Flow:** Improve sentence structure and readability.
+    - **Brand Voice Alignment:** Ensure the tone matches our brand voice: '{brand_voice}'.
+    - **Fact-Checking:** Briefly verify any major claims or data points.
+
+    If the content requires significant revisions, clearly indicate what needs to be
+    fixed and why, so the Content Creator can make the necessary improvements.
+  expected_output: >
+    Either:
+    1. The final, fully polished, and error-free version of the blog post, as a
+       single block of markdown text, OR
+    2. A detailed list of required revisions if the content needs significant improvement.
+  agent: review_agent
+
+report_formatting_task:
+  description: >
+    Take the final, polished blog post from the context and format it into a
+    complete, professional report.
+
+    You must perform the following actions:
+    1.  Create a compelling and SEO-friendly main title for the report.
+    2.  Write a 100-word executive summary that goes at the top of the report.
+    3.  Format the entire document using clean markdown, including proper headings
+        (#, ##), bullet points, and bold text for emphasis.
+    4.  Add a "Distribution Channels" section at the end with recommendations for
+        where this content should be published (e.g., company blog, LinkedIn, etc.)
+  expected_output: >
+    A single, clean markdown document containing the final report. The report
+    must start with the main title (H1), followed by the executive summary,
+    and then the full, formatted article. Do not include '```markdown' or
+    any other code block specifiers.
+  agent: content_director
+
+performance_analysis_task:
+  description: >
+    Analyze the performance of the published content and provide optimization
+    recommendations. Since this is a simulation, use the Analytics Tool to generate
+    mock performance data for the content.
+
+    Your analysis should include:
+    1. Key performance metrics (views, engagement rate, conversion rate, etc.)
+    2. Comparison against industry benchmarks
+    3. Identification of strengths and weaknesses
+    4. Specific optimization recommendations
+    5. Decision on whether the content has met its goals or needs further optimization
+
+    The content ID for analysis is: '{topic} Report'
+  expected_output: >
+    A detailed performance analysis report with clear metrics, insights, and
+    actionable recommendations. The report should conclude with a definitive
+    recommendation: "Success - Goals Met" or "Needs Optimization" with specific
+    areas to improve.
+  agent: performance_agent
