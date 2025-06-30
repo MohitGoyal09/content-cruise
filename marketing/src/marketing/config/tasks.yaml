@@ -24,36 +24,50 @@ campaign_management_task:
 
 market_research_task:
   description: >
-    Conduct a comprehensive market analysis for the topic: '{topic}'.
+    Conduct a comprehensive market analysis for the topic: '{topic}' targeting {target_audience}.
     Your final report should be a detailed brief for the content creation team.
-    Use your suite of research tools to gather data. The current year is {current_year}.
+    Use your suite of research tools to gather current data. The current year is {current_year}.
+
+    Focus your research on:
+    - Target audience: {target_audience}
+    - Distribution channels: {channels}
+    - Campaign budget considerations: ${budget}
+    - Campaign timeline: {start_date} to {end_date}
 
     The analysis must include:
-    1.  **Top 3 Competitors:** Identify who they are and summarize their content strategy.
-    2.  **Trending Topics & Angles:** What are the current hot-button issues and rising trends?
-    3.  **Content Gaps:** What important sub-topics are competitors NOT covering?
-    4.  **Target Audience Profile:** Describe the ideal reader for this content.
-    5.  **SEO Keywords:** A list of 10-15 primary and secondary keywords.
+    1. **Top 3 Competitors:** Identify who they are and analyze their strategies for {target_audience}
+    2. **Trending Topics & Angles:** Current {current_year} trends relevant to {topic} and {target_audience}
+    3. **Content Gaps:** What competitors aren't covering for {target_audience} in {current_year}
+    4. **Target Audience Profile:** Deep dive into {target_audience} needs, pain points, and preferences
+    5. **SEO Keywords:** 10-15 keywords relevant to {topic} and {target_audience}
+    6. **Channel-Specific Insights:** Optimization tips for {channels}
   expected_output: >
     A structured markdown document containing the full strategic brief with clear
-    sections for Competitor Analysis, Trending Topics, Content Gaps, Audience
-    Profile, and SEO Keywords.
+    sections for Competitor Analysis, {current_year} Trending Topics, Content Gaps, 
+    {target_audience} Profile, SEO Keywords, and {channels} Optimization.
   agent: market_strategist
 
 content_creation_task:
   description: >
     Using the strategic brief provided in the context, write a comprehensive and
     engaging blog post on the topic of '{topic}'. The article should be at least
-    700 words.
+    700 words and targeted specifically at {target_audience}.
 
-    Ensure you:
-    - Target the audience profile defined in the brief.
-    - Naturally integrate the recommended SEO keywords.
-    - Write in a tone that is both informative and captivating.
-    - Structure the article with a clear introduction, body, and conclusion.
+    Key requirements:
+    - Target the audience profile: {target_audience}
+    - Consider the campaign budget of ${budget} when discussing solutions
+    - Naturally integrate the recommended SEO keywords
+    - Write in the brand voice: '{brand_voice}'
+    - Structure for distribution across: {channels}
+    - Reference current year {current_year} trends and data
+    - Make content relevant for the campaign period ({start_date} to {end_date})
+
+    Ensure the content is optimized for the specified distribution channels and speaks
+    directly to the target audience's needs and budget considerations.
   expected_output: >
-    The full text of a well-written, 700+ word blog post in markdown format.
-    The article should be ready for the editing phase.
+    The full text of a well-written, 700+ word blog post in markdown format targeting
+    {target_audience}. The article should be ready for the editing phase and optimized
+    for {channels} distribution.
   agent: content_creator
 
 content_review_task:
@@ -98,19 +112,20 @@ report_formatting_task:
 performance_analysis_task:
   description: >
     Analyze the performance of the published content and provide optimization
-    recommendations. Since this is a simulation, use the Analytics Tool to generate
-    mock performance data for the content.
+    recommendations. The current year is {current_year} and today's date should be used for the analysis.
+
+    Use the Analytics Tool to get performance data for the content titled: '{topic} Report'
 
     Your analysis should include:
     1. Key performance metrics (views, engagement rate, conversion rate, etc.)
-    2. Comparison against industry benchmarks
+    2. Comparison against industry benchmarks for {target_audience}
     3. Identification of strengths and weaknesses
-    4. Specific optimization recommendations
-    5. Decision on whether the content has met its goals or needs further optimization
+    4. Specific optimization recommendations based on the {channels} distribution channels
+    5. Decision on whether the content has met its goals within the campaign budget of ${budget}
 
-    The content ID for analysis is: '{topic} Report'
+    Important: Use the current year {current_year} in your analysis and ensure all dates reflect the current time period.
   expected_output: >
-    A detailed performance analysis report with clear metrics, insights, and
+    A detailed performance analysis report dated in {current_year} with clear metrics, insights, and
     actionable recommendations. The report should conclude with a definitive
     recommendation: "Success - Goals Met" or "Needs Optimization" with specific
     areas to improve.

@@ -1,64 +1,160 @@
-from crewai import Agent, Crew, Process, Task
+from crewai import Agent, Crew, Process, Task, LLM
 from crewai.project import CrewBase, agent, crew, task
 from crewai.agents.agent_builder.base_agent import BaseAgent
-from typing import List
-# If you want to run a snippet of code before or after the crew starts,
-# you can use the @before_kickoff and @after_kickoff decorators
-# https://docs.crewai.com/concepts/crews#example-crew-class-with-decorators
+from crewai_tools import (
+    SerperDevTool,
+    ScrapeWebsiteTool, 
+    FileReadTool,
+    FileWriterTool
+)
+from .tools.analytics_tool import AnalyticsTool
+from crewai.tools import BaseTool
+from typing import List, Dict, Any
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+# Configure Gemini LLM
+gemini_llm = LLM(
+    model="gemini/gemini-1.5-flash",
+    api_key=os.getenv("GOOGLE_API_KEY")
+)
 
 @CrewBase
 class Marketing():
-    """Marketing crew"""
+    """Marketing crew for content creation and optimization workflow"""
 
     agents: List[BaseAgent]
     tasks: List[Task]
 
-    # Learn more about YAML configuration files here:
-    # Agents: https://docs.crewai.com/concepts/agents#yaml-configuration-recommended
-    # Tasks: https://docs.crewai.com/concepts/tasks#yaml-configuration-recommended
-    
-    # If you would like to add tools to your agents, you can learn more about it here:
-    # https://docs.crewai.com/concepts/agents#agent-tools
     @agent
-    def researcher(self) -> Agent:
+    def campaign_manager(self) -> Agent:
+        """Campaign Manager agent that coordinates the entire workflow"""
         return Agent(
-            config=self.agents_config['researcher'], # type: ignore[index]
+            config=self.agents_config['campaign_manager'],
+            llm=gemini_llm,
             verbose=True
         )
 
     @agent
-    def reporting_analyst(self) -> Agent:
+    def market_strategist(self) -> Agent:
+        """Market Strategist agent with research tools"""
         return Agent(
-            config=self.agents_config['reporting_analyst'], # type: ignore[index]
+            config=self.agents_config['market_strategist'],
+            tools=[
+                SerperDevTool(),  # For web search
+                ScrapeWebsiteTool()  # For scraping website content
+            ],
+            llm=gemini_llm,
             verbose=True
         )
 
-    # To learn more about structured task outputs,
-    # task dependencies, and task callbacks, check out the documentation:
-    # https://docs.crewai.com/concepts/tasks#overview-of-a-task
-    @task
-    def research_task(self) -> Task:
-        return Task(
-            config=self.tasks_config['research_task'], # type: ignore[index]
+    @agent
+    def content_creator(self) -> Agent:
+        """Content Creator agent with writing and SEO tools"""
+        return Agent(
+            config=self.agents_config['content_creator'],
+            tools=[
+                SerperDevTool(),  # For fact-checking and research during content creation
+                FileReadTool(),   # To read research findings and strategic brief
+                FileWriterTool()   # To save draft content
+            ],
+            llm=gemini_llm,
+            verbose=True
+        )
+
+    @agent
+    def review_agent(self) -> Agent:
+        """Review and Polish agent with quality checking tools"""
+        return Agent(
+            config=self.agents_config['review_agent'],
+            tools=[
+                FileReadTool(),  # To read content for review
+                FileWriterTool()  # To save reviewed content
+            ],
+            llm=gemini_llm,
+            verbose=True
+        )
+
+    @agent
+    def content_director(self) -> Agent:
+        """Content Director agent for formatting and distribution"""
+        return Agent(
+            config=self.agents_config['content_director'],
+            tools=[
+                FileReadTool(),  # To read final content
+                FileWriterTool(),  # To save formatted report
+                ScrapeWebsiteTool()  # To check formatting standards on target platforms
+            ],
+            llm=gemini_llm,
+            verbose=True
+        )
+
+    @agent
+    def performance_agent(self) -> Agent:
+        """Performance Analysis agent with analytics tools"""
+        return Agent(
+            config=self.agents_config['performance_agent'],
+            tools=[
+                FileReadTool(),   # To read published content
+                FileWriterTool(),  # To save performance reports
+                SerperDevTool(),   # To research industry benchmarks
+                AnalyticsTool()    # To generate performance analytics
+            ],
+            llm=gemini_llm,
+            verbose=True
         )
 
     @task
-    def reporting_task(self) -> Task:
+    def campaign_management_task(self) -> Task:
+        """Overall campaign management task"""
         return Task(
-            config=self.tasks_config['reporting_task'], # type: ignore[index]
-            output_file='report.md'
+            config=self.tasks_config['campaign_management_task']
+        )
+
+    @task
+    def market_research_task(self) -> Task:
+        """Market research and strategy task"""
+        return Task(
+            config=self.tasks_config['market_research_task']
+        )
+
+    @task
+    def content_creation_task(self) -> Task:
+        """Content creation task"""
+        return Task(
+            config=self.tasks_config['content_creation_task']
+        )
+
+    @task
+    def content_review_task(self) -> Task:
+        """Content review and polish task"""
+        return Task(
+            config=self.tasks_config['content_review_task']
+        )
+
+    @task
+    def report_formatting_task(self) -> Task:
+        """Report formatting and distribution task"""
+        return Task(
+            config=self.tasks_config['report_formatting_task']
+        )
+
+    @task
+    def performance_analysis_task(self) -> Task:
+        """Performance analysis and optimization task"""
+        return Task(
+            config=self.tasks_config['performance_analysis_task']
         )
 
     @crew
     def crew(self) -> Crew:
-        """Creates the Marketing crew"""
-        # To learn how to add knowledge sources to your crew, check out the documentation:
-        # https://docs.crewai.com/concepts/knowledge#what-is-knowledge
-
+        """Creates the Marketing workflow crew"""
         return Crew(
-            agents=self.agents, # Automatically created by the @agent decorator
-            tasks=self.tasks, # Automatically created by the @task decorator
-            process=Process.sequential,
+            agents=[self.market_strategist(), self.content_creator(), 
+                   self.review_agent(), self.content_director(), self.performance_agent()],
+            tasks=self.tasks,
+            process=Process.hierarchical,
             verbose=True,
-            # process=Process.hierarchical, # In case you wanna use that instead https://docs.crewai.com/how-to/Hierarchical/
+            manager_agent=self.campaign_manager()
         )

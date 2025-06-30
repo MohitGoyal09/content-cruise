@@ -12,7 +12,7 @@ campaign_manager:
     has met its goals or needs further optimization.
 
 market_strategist:
-  role: "Lead Market Research & Content Strategist for {topic}"
+  role: "Lead Market Research & Content Strategist for {campaign_name}"
   goal: >
     Analyze market trends, competitor strategies, and audience sentiment 
     to produce a comprehensive, data-driven content strategy brief. Your
@@ -26,7 +26,7 @@ market_strategist:
     that provides a clear north star for the entire creative team to follow.
 
 content_creator:
-  role: "Expert Multi-format Content Creator for {topic}"
+  role: "Expert Multi-format Content Creator for {campaign_name}"
   goal: >
     Generate a high-quality, engaging, and SEO-optimized blog post based on 
     the provided strategic brief. The content should be tailored for the
