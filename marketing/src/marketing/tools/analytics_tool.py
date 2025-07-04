@@ -31,13 +31,13 @@ class AnalyticsTool(BaseTool):
         requested_metrics = [m.strip().lower() for m in metrics.split(',')]
         
         # Generate realistic analytics data based on content type and industry benchmarks
-        views = random.randint(1500, 8000)  # Realistic for SMB content
-        engagement_rate = round(random.uniform(2.5, 6.5), 2)  # Industry standard 2-7%
-        conversion_rate = round(random.uniform(1.2, 4.5), 2)  # B2B content typically 1-5%
-        avg_time_on_page = round(random.uniform(120, 480), 1)  # 2-8 minutes for long-form
-        bounce_rate = round(random.uniform(35, 65), 1)  # Typical range for blog content
-        shares = random.randint(25, 150)  # Realistic social sharing
-        lead_generation = random.randint(15, 85)  # Form submissions/downloads
+        views = random.randint(1500, 8000)  
+        engagement_rate = round(random.uniform(2.5, 6.5), 2)  
+        conversion_rate = round(random.uniform(1.2, 4.5), 2)  
+        avg_time_on_page = round(random.uniform(120, 480), 1)  
+        bounce_rate = round(random.uniform(35, 65), 1)  
+        shares = random.randint(25, 150)  
+        lead_generation = random.randint(15, 85)  
         
         # Industry benchmarks for comparison
         benchmark_engagement = 4.0

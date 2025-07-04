@@ -4,11 +4,12 @@ from dotenv import load_dotenv
 load_dotenv()
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
-from crewai_tools import SerperDevTool, FileWriterTool, DirectoryReadTool, ScrapeWebsiteTool
+from crewai_tools import SerperDevTool
 from crewai import LLM
 import logging
 import time
 import random
+import json
 
 logging.basicConfig(level=logging.WARNING)
 
@@ -46,26 +47,36 @@ gemini_llm = LLM(
 @CrewBase
 class Marketing():
     """
-    COMPLETE CONTENT MARKETING CAMPAIGN CREW with ROBUST RETRY LOGIC
-    📝 COMPREHENSIVE CAMPAIGN: Full marketing automation content suite
-    💰 COST: ~$3-5 for complete publication-ready campaign
-    ⏱️ TIME: 45-60 minutes for complete 6-task campaign generation
+    SOPHISTICATED MULTI-STAGE MARKETING CAMPAIGN CREW with ITERATIVE QUALITY CONTROL
+    🧠 INTELLIGENT WORKFLOW: Multi-stage Create → Analyze → Optimize loops across ALL content
+    📝 COMPREHENSIVE CAMPAIGN: Full marketing automation content suite with quality assurance
+    💰 COST: ~$4-7 for complete publication-ready campaign with optimization loops
+    ⏱️ TIME: 60-90 minutes for complete 10-stage sophisticated campaign generation
     🔄 RETRY STRATEGY:
        - LLM Level: 3x API retries with exponential backoff  
        - Agent Level: 5x iterations with extended timeouts (20-30 min each)
-       - Crew Level: 2-hour total execution window for quality
-    💎 COMPLETE CAMPAIGN FEATURES:
-       - Market research with competitor & keyword analysis
-       - Full 1200+ word blog posts with SEO optimization
-       - Social media content (LinkedIn, Twitter, Instagram)
-       - Email marketing sequence (3 complete emails)
-       - Professional audio slogans with voice generation
-       - Performance analysis and optimization recommendations
-    🚀 RELIABILITY: Verbose logging, auto-recovery, comprehensive error handling
+       - Crew Level: 3-hour total execution window for quality optimization
+    
+    💎 SOPHISTICATED CAMPAIGN WORKFLOW:
+       Stage 1: Foundational Research (market intelligence)
+       Stage 2: Core Content Iteration (blog: create → analyze → optimize)
+       Stage 3: Distribution Content Iteration (social+email: create → analyze → optimize)
+       Stage 4: Brand Content Iteration (audio: create → analyze)
+       Stage 5: Executive Assembly (comprehensive final report)
+    
+    🎯 PREMIUM CAMPAIGN FEATURES:
+       - Strategic market research with competitor & keyword analysis
+       - Iteratively optimized 1500+ word blog posts with SEO excellence
+       - Multi-platform social media strategy (LinkedIn, Twitter, Instagram, Facebook)
+       - Customer journey email sequence (5 strategic emails)
+       - Culturally-resonant audio slogans with voice generation
+       - Comprehensive performance analysis and optimization across ALL content
+       - Executive-ready campaign assembly with implementation roadmap
+    
+    🚀 ADVANCED INTELLIGENCE: Quality control loops, strategic optimization, comprehensive analysis
     """
     agents_config = 'config/agents.yaml'
     tasks_config = 'config/tasks.yaml'
-
     @agent
     def campaign_manager(self) -> Agent:
         return Agent(
@@ -156,19 +167,35 @@ class Marketing():
         )
 
     @task
-    def social_media_creation_task(self) -> Task:
+    def blog_optimization_task(self) -> Task:
         return Task(
-            config=self.tasks_config['social_media_creation_task'],
+            config=self.tasks_config['blog_optimization_task'],
             agent=self.content_creator(),
-            expected_output="A professionally formatted markdown file with 3 high-quality, engaging social media posts."
+            expected_output="Fully optimized blog post implementing all strategic recommendations."
         )
 
     @task
-    def email_marketing_task(self) -> Task:
+    def distribution_content_creation_task(self) -> Task:
         return Task(
-            config=self.tasks_config['email_marketing_task'],
+            config=self.tasks_config['distribution_content_creation_task'],
             agent=self.content_creator(),
-            expected_output="3 ready-to-send marketing emails with subject lines and full content."
+            expected_output="Two comprehensive files: posts_v1.md with 4 platform-optimized social media posts and email-sequence_v1.md with complete 5-email customer journey sequence."
+        )
+
+    @task
+    def distribution_content_analysis_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['distribution_content_analysis_task'],
+            agent=self.performance_analyst(),
+            expected_output="Comprehensive strategic analysis with prioritized optimization recommendations for distribution content improvement."
+        )
+
+    @task
+    def distribution_content_optimization_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['distribution_content_optimization_task'],
+            agent=self.content_creator(),
+            expected_output="Two fully optimized files implementing all strategic recommendations: posts_final.md and email-sequence_final.md."
         )
 
     @task
@@ -176,7 +203,23 @@ class Marketing():
         return Task(
             config=self.tasks_config['audio_slogan_task'],
             agent=self.brand_voice_specialist(),
-            expected_output="A text file with 2 high-quality slogan options and an audio file."
+            expected_output="5 culturally-resonant Hindi slogans with professional audio generation of the most impactful slogan."
+        )
+
+    @task
+    def audio_slogan_analysis_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['audio_slogan_analysis_task'],
+            agent=self.performance_analyst(),
+            expected_output="Detailed analysis of slogan effectiveness with strategic recommendations for optimization and market deployment."
+        )
+
+    @task
+    def final_report_assembly_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['final_report_assembly_task'],
+            agent=self.campaign_manager(),
+            expected_output="A comprehensive, executive-ready campaign report showcasing the complete optimized marketing campaign."
         )
 
     def _handle_gemini_rate_limit(self, retry_count=0, max_retries=5):
@@ -190,9 +233,46 @@ class Marketing():
         return True
 
     def _task_callback(self, task_output):
+        global CAMPAIGN_STATUS
+        
+        # Get task and agent information
         task_name = task_output.task.name if hasattr(task_output, 'task') and hasattr(task_output.task, 'name') else "Unknown task"
-        print(f"✅ Task completed: {task_name}")
+        agent_name = task_output.task.agent.role if (hasattr(task_output, 'task') and 
+                                                    hasattr(task_output.task, 'agent') and 
+                                                    hasattr(task_output.task.agent, 'role')) else "Unknown agent"
+        
+        # Get user-friendly names
+        friendly_task_name = self.task_descriptions.get(task_name, task_name)
+        friendly_agent_name = self.agent_descriptions.get(agent_name, agent_name)
+        
+        # Update status
+        CAMPAIGN_STATUS["current_task"] = friendly_task_name
+        CAMPAIGN_STATUS["current_agent"] = friendly_agent_name
+        CAMPAIGN_STATUS["task_status"] = "completed"
+        CAMPAIGN_STATUS["completed_tasks"].append(friendly_task_name)
+        CAMPAIGN_STATUS["progress"] = min(100, int((len(CAMPAIGN_STATUS["completed_tasks"]) / CAMPAIGN_STATUS["total_tasks"]) * 100))
+        CAMPAIGN_STATUS["last_update"] = time.time()
+        
+        # Calculate estimated completion time
+        elapsed_time = CAMPAIGN_STATUS["last_update"] - CAMPAIGN_STATUS["start_time"]
+        if CAMPAIGN_STATUS["progress"] > 0:
+            total_estimated_time = (elapsed_time / CAMPAIGN_STATUS["progress"]) * 100
+            remaining_time = total_estimated_time - elapsed_time
+            CAMPAIGN_STATUS["estimated_completion"] = remaining_time
+        
+        # Save status to file for potential recovery
+        try:
+            with open("campaign_status.json", "w") as f:
+                json.dump(CAMPAIGN_STATUS, f)
+        except Exception as e:
+            print(f"Error saving campaign status: {str(e)}")
+        
+        print(f"✅ Task completed: {friendly_task_name} by {friendly_agent_name}")
+        print(f"📊 Progress: {CAMPAIGN_STATUS['progress']}% complete")
+        
         time.sleep(5)
+        
+        # Handle market research task specific logic
         if "market_research" in task_name.lower():
             campaign_name = os.getenv("CAMPAIGN_NAME")
             if not campaign_name or campaign_name.strip() in ["", "None", "null"]:
@@ -223,30 +303,43 @@ class Marketing():
 
     @crew
     def crew(self) -> Crew:
-        print("🚀 COMPLETE MARKETING CAMPAIGN: 6-task comprehensive content generation")
-        print("📝 FULL CAMPAIGN: Market research + Blog + Social + Email + Audio + Analysis")
-        print("🔄 RETRY-ENABLED: Auto-recovery on API failures, 5x iterations per agent")
-        print("💎 Target: Complete marketing campaign, ~45-60 min runtime")
+        print("🧠 SOPHISTICATED MULTI-STAGE CAMPAIGN: 10-task iterative quality control workflow")
+        print("📝 INTELLIGENT CAMPAIGN: Research → Blog Loop → Distribution Loop → Audio Loop → Assembly")
+        print("🔄 QUALITY-OPTIMIZED: Create → Analyze → Optimize loops across ALL content types")
+        print("💎 Target: Premium campaign with comprehensive optimization, ~60-90 min runtime")
         return Crew(
             agents=[
                 self.market_strategist(),
                 self.content_creator(),
                 self.performance_analyst(),
-                self.brand_voice_specialist()
+                self.brand_voice_specialist(),
+                self.campaign_manager()
             ],
             tasks=[
+                # Stage 1: Foundational Research
                 self.market_research_task(),
+                
+                # Stage 2: Core Content Iteration (Blog)
                 self.blog_creation_task(),
                 self.blog_analysis_task(),
-                self.social_media_creation_task(),
-                self.email_marketing_task(),
-                self.audio_slogan_task()
+                self.blog_optimization_task(),
+                
+                # Stage 3: Distribution Content Creation & Iteration
+                self.distribution_content_creation_task(),
+                self.distribution_content_analysis_task(),
+                self.distribution_content_optimization_task(),
+                
+                # Stage 4: Brand Content Creation & Iteration
+                self.audio_slogan_task(),
+                self.audio_slogan_analysis_task(),
+                
+                # Stage 5: Final Assembly & Review
+                self.final_report_assembly_task()
             ],
             process=Process.sequential,
             verbose=True,
             max_rpm=30,
             full_output=True,
-            step_callback=self._task_callback,
             max_execution_time=10800,
             share_crew=False,
             output_log_file="crew_execution.log"
