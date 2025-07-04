@@ -1,132 +1,490 @@
 campaign_management_task:
   description: >
-    As the Campaign Manager, your task is to coordinate the entire content marketing workflow
-    according to our established process. You will:
+    As Senior Campaign Director, orchestrate a premium content marketing campaign with strategic excellence.
+     Lead with strategic vision and operational excellence.
 
-    1. Initiate the market research phase by delegating to the Market Strategist
-    2. Review the strategic brief and delegate content creation to the Content Creator
-    3. Send the draft content to the Review Agent for quality assurance
-    4. If revisions are needed, coordinate between Content Creator and Review Agent
-    5. Once approved, delegate formatting to the Content Director
-    6. After publication, request performance analysis from the Performance Agent
-    7. Based on performance data, decide whether to:
-       - Consider the campaign successful if goals are met
-       - Request specific optimizations if minor improvements are needed
-       - Restart the process if major changes are required
+    **STRATEGIC CAMPAIGN LEADERSHIP:**
+    1. Establish campaign vision aligned with business objectives for '{topic}'
+    2. Ensure all content specifically addresses {target_audience} pain points and goals
+    3. Direct market intelligence gathering for competitive advantage
+    4. Oversee creation of high-performance, conversion-optimized content
+    5. Guide strategic brand voice development with cultural sensitivity
+    6. Implement quality assurance with performance optimization
+    7. Conduct comprehensive analysis with actionable growth recommendations
+    8. Deliver executive-ready campaign package with ROI projections
 
-    Your role is to make strategic decisions at each step and ensure the workflow
-    proceeds efficiently. The topic for this campaign is: '{topic}'.
+    **TARGET AUDIENCE INTEGRATION:**
+    - Primary audience: {target_audience}
+    - Budget allocation: ${budget}
+    - Campaign timeline: {start_date} to {end_date}
+    - Brand voice: '{brand_voice}'
+    - Ensure every deliverable is specifically tailored to audience needs and business context
+
+    **QUALITY STANDARDS:**
+    - All content must be publication-ready with professional presentation
+    - Each piece should serve multiple strategic objectives (SEO, conversion, authority)
+    - Maintain consistent brand voice while maximizing audience engagement
+    - Focus on measurable business outcomes and competitive differentiation
+
   expected_output: >
-    A comprehensive report detailing the entire campaign process, decisions made at
-    each stage, and final outcomes. Include recommendations for future campaigns
-    based on what worked well and what could be improved.
+    Executive-level campaign strategy with quality assessments, performance projections,
+    strategic recommendations, and comprehensive campaign success framework.
   agent: campaign_manager
 
 market_research_task:
   description: >
-    Conduct a comprehensive market analysis for the topic: '{topic}' targeting {target_audience}.
-    Your final report should be a detailed brief for the content creation team.
-    Use your suite of research tools to gather current data. The current year is {current_year}.
+    Conduct comprehensive market intelligence analysis for '{topic}' targeting {target_audience}.
+    Deliver strategic insights that inform all campaign decisions and competitive positioning.
 
-    Focus your research on:
-    - Target audience: {target_audience}
-    - Distribution channels: {channels}
-    - Campaign budget considerations: ${budget}
-    - Campaign timeline: {start_date} to {end_date}
+    **MANDATORY: Use File Writer Tool with these EXACT file paths for each analysis:**
 
-    The analysis must include:
-    1. **Top 3 Competitors:** Identify who they are and analyze their strategies for {target_audience}
-    2. **Trending Topics & Angles:** Current {current_year} trends relevant to {topic} and {target_audience}
-    3. **Content Gaps:** What competitors aren't covering for {target_audience} in {current_year}
-    4. **Target Audience Profile:** Deep dive into {target_audience} needs, pain points, and preferences
-    5. **SEO Keywords:** 10-15 keywords relevant to {topic} and {target_audience}
-    6. **Channel-Specific Insights:** Optimization tips for {channels}
+    **STEP 1: Competitive Intelligence Analysis**
+    **File path: "content/{campaign_name}/market_research/competitors.md"**
+
+    Create comprehensive competitive analysis including:
+    - **Primary Competitors:** Identify 8-10 direct competitors in the {topic} space
+    - **Competitive Positioning:** Analyze pricing strategies, target markets, and value propositions
+    - **Market Share Analysis:** Estimated market position and growth trajectories
+    - **Strengths & Weaknesses:** Detailed SWOT analysis for top 5 competitors
+    - **Opportunity Gaps:** Identify 5-7 specific market opportunities competitors are missing
+    - **Strategic Recommendations:** Actionable insights for competitive advantage
+    - **Target Audience Overlap:** How competitors address similar audience segments to {target_audience}
+
+    **STEP 2: Strategic Keyword & SEO Analysis**
+    **File path: "content/{campaign_name}/market_research/keywords.md"**
+
+    Create comprehensive keyword strategy including:
+    - **Primary Keywords:** 20 high-value keywords with search volume and competition analysis
+    - **Long-tail Opportunities:** 25 long-tail keywords specifically relevant to {target_audience}
+    - **Competitor Keyword Gaps:** Keywords competitors rank for that we should target
+    - **Content Topic Clusters:** Organized keyword groups for content planning
+    - **Local/Industry-Specific Terms:** Keywords relevant to {target_audience} business context
+    - **Seasonal Trends:** Keyword performance patterns and timing opportunities
+    - **Voice Search Optimization:** Natural language keywords for voice search
+
+    **STEP 3: Target Audience Deep Dive**
+    **File path: "content/{campaign_name}/market_research/audience.md"**
+
+    Create comprehensive audience analysis for {target_audience}:
+    - **Detailed Persona Development:** Demographics, psychographics, and behavioral patterns
+    - **Pain Points Analysis:** 10 specific challenges this audience faces with {topic}
+    - **Goals & Aspirations:** What success looks like for this audience segment
+    - **Decision-Making Process:** How they research, evaluate, and purchase solutions
+    - **Content Preferences:** Preferred content formats, channels, and messaging styles
+    - **Objections & Concerns:** Common hesitations and how to address them
+    - **Success Metrics:** How this audience measures ROI and success
+    - **Cultural Considerations:** Relevant cultural context for effective communication
+
+    **QUALITY REQUIREMENTS:**
+    - Each analysis must be data-driven with specific insights and actionable recommendations
+    - Include quantitative data where possible (market size, growth rates, volumes)
+    - Focus on insights that directly inform content strategy and positioning
+    - Ensure all recommendations are specifically tailored to {target_audience}
+
   expected_output: >
-    A structured markdown document containing the full strategic brief with clear
-    sections for Competitor Analysis, {current_year} Trending Topics, Content Gaps, 
-    {target_audience} Profile, SEO Keywords, and {channels} Optimization.
+    3 comprehensive market intelligence reports providing strategic foundation for entire campaign,
+    with actionable insights specifically focused on {target_audience} opportunities.
   agent: market_strategist
 
-content_creation_task:
+blog_creation_task:
   description: >
-    Using the strategic brief provided in the context, write a comprehensive and
-    engaging blog post on the topic of '{topic}'. The article should be at least
-    700 words and targeted specifically at {target_audience}.
+    Create an exceptional, high-converting blog post about '{topic}' specifically designed for {target_audience}.
+    Focus on delivering measurable value while optimizing for search visibility and conversion.
 
-    Key requirements:
-    - Target the audience profile: {target_audience}
-    - Consider the campaign budget of ${budget} when discussing solutions
-    - Naturally integrate the recommended SEO keywords
-    - Write in the brand voice: '{brand_voice}'
-    - Structure for distribution across: {channels}
-    - Reference current year {current_year} trends and data
-    - Make content relevant for the campaign period ({start_date} to {end_date})
+    **MANDATORY: Use File Writer Tool with EXACT file path: "content/{campaign_name}/blogs/ai-marketing-guide.md"**
 
-    Ensure the content is optimized for the specified distribution channels and speaks
-    directly to the target audience's needs and budget considerations.
+    **STRATEGIC BLOG REQUIREMENTS:**
+
+    **Title Optimization:**
+    "The Complete AI Marketing Automation Guide for {target_audience}: Transform Your Business in 2025"
+
+    **Content Structure (1500-2000 words):**
+
+    **1. Compelling Hook (150-200 words)**
+    - Start with surprising statistic or provocative question relevant to {target_audience}
+    - Establish credibility and preview the value they'll receive
+    - Address specific pain point this audience faces with {topic}
+
+    **2. Problem Definition (250-300 words)**
+    - Define current challenges {target_audience} faces without AI marketing automation
+    - Use specific examples and data relevant to their business context
+    - Create urgency around the competitive disadvantage of not adopting these solutions
+
+    **3. Solution Overview (300-350 words)**
+    - Explain what AI marketing automation means specifically for {target_audience}
+    - Address common misconceptions and concerns this audience might have
+    - Position as strategic business transformation, not just technology adoption
+
+    **4. Strategic Benefits Analysis (500-600 words)**
+    - **ROI & Cost Savings:** Specific financial impact for {target_audience}
+    - **Time & Efficiency Gains:** Quantified productivity improvements
+    - **Competitive Advantage:** How this creates market differentiation
+    - **Scalability & Growth:** Long-term business growth implications
+    - **Risk Mitigation:** How automation reduces business risks
+
+    **5. Implementation Roadmap (400-500 words)**
+    - **Phase 1:** Quick wins and foundational setup (0-30 days)
+    - **Phase 2:** Advanced automation and optimization (30-90 days)
+    - **Phase 3:** Scaling and advanced strategies (90+ days)
+    - Include specific action steps tailored to {target_audience} business context
+
+    **6. Tool Recommendations & Resources (200-250 words)**
+    - Recommend 5-7 specific tools with pricing and use cases for {target_audience}
+    - Include implementation difficulty and expected ROI timeline
+    - Provide next steps and resources for getting started
+
+    **SEO & CONVERSION OPTIMIZATION:**
+    - Brand voice: {brand_voice}
+    - Include 3-5 strategic internal linking opportunities
+    - Add 2-3 compelling call-to-action sections
+    - Optimize for featured snippets with structured content
+    - Include social proof and credibility indicators
+
+    **QUALITY STANDARDS:**
+    - Every paragraph must deliver specific value to {target_audience}
+    - Include data, statistics, and concrete examples throughout
+    - Write with authority while remaining accessible and actionable
+    - Ensure content positions reader for immediate implementation
+
   expected_output: >
-    The full text of a well-written, 700+ word blog post in markdown format targeting
-    {target_audience}. The article should be ready for the editing phase and optimized
-    for {channels} distribution.
+    Publication-ready 1500-2000 word blog post optimized for search rankings and conversion,
+    specifically tailored to {target_audience} needs and business context.
   agent: content_creator
 
-content_review_task:
+blog_analysis_task:
   description: >
-    Review the blog post provided in the context. Perform a meticulous edit to
-    ensure it is perfect and ready for publishing.
+    Conduct comprehensive performance analysis of the blog post with strategic optimization recommendations.
 
-    Your review process must include:
-    - **Proofreading:** Correct all spelling and grammatical errors.
-    - **Clarity & Flow:** Improve sentence structure and readability.
-    - **Brand Voice Alignment:** Ensure the tone matches our brand voice: '{brand_voice}'.
-    - **Fact-Checking:** Briefly verify any major claims or data points.
+    **MANDATORY STEPS:**
+    1. **Use File Read Tool with file_path: "content/{campaign_name}/blogs/ai-marketing-guide.md"**
+    2. **Use File Writer Tool with EXACT file_path: "content/{campaign_name}/analysis/strategic-optimization.md"**
 
-    If the content requires significant revisions, clearly indicate what needs to be
-    fixed and why, so the Content Creator can make the necessary improvements.
+    **COMPREHENSIVE ANALYSIS FRAMEWORK:**
+
+    **1. SEO Performance Assessment:**
+    - Keyword density and semantic optimization analysis
+    - Title tag and meta description optimization opportunities
+    - Header structure and content hierarchy evaluation
+    - Internal linking strategy and improvement recommendations
+
+    **2. Conversion Optimization Analysis:**
+    - Call-to-action effectiveness and placement analysis
+    - Value proposition clarity and persuasion evaluation
+    - Trust signals and credibility indicators assessment
+    - User experience and readability optimization
+
+    **3. Target Audience Alignment:**
+    - Assess how well content addresses {target_audience} specific needs
+    - Evaluate language, tone, and complexity for audience appropriateness
+    - Identify opportunities to better address audience pain points
+    - Recommend enhancements for audience engagement
+
+    **4. Competitive Differentiation:**
+    - Analyze unique value propositions and positioning
+    - Identify opportunities to stand out from competitor content
+    - Recommend strategic angles that create competitive advantage
+
+    **5. Performance Predictions:**
+    - Estimated organic traffic potential and ranking probability
+    - Conversion rate projections and lead generation potential
+    - Social sharing and engagement likelihood
+    - Long-term authority building and backlink potential
+
+    **ACTIONABLE RECOMMENDATIONS:**
+    - Provide specific, implementable improvements with expected impact
+    - Prioritize recommendations by potential ROI and implementation difficulty
+    - Include overall content quality score and performance projections
+
   expected_output: >
-    Either:
-    1. The final, fully polished, and error-free version of the blog post, as a
-       single block of markdown text, OR
-    2. A detailed list of required revisions if the content needs significant improvement.
-  agent: review_agent
+    Comprehensive strategic analysis with prioritized optimization recommendations,
+    performance projections, and specific action items for content improvement.
+  agent: performance_analyst
 
-report_formatting_task:
+blog_optimization_task:
   description: >
-    Take the final, polished blog post from the context and format it into a
-    complete, professional report.
+    Create an enhanced version of the blog post implementing all strategic recommendations.
+    Deliver publication-ready content optimized for maximum performance and audience impact.
 
-    You must perform the following actions:
-    1.  Create a compelling and SEO-friendly main title for the report.
-    2.  Write a 100-word executive summary that goes at the top of the report.
-    3.  Format the entire document using clean markdown, including proper headings
-        (#, ##), bullet points, and bold text for emphasis.
-    4.  Add a "Distribution Channels" section at the end with recommendations for
-        where this content should be published (e.g., company blog, LinkedIn, etc.)
+    **OPTIMIZATION STRATEGY:**
+    1. **Read Analysis:** Review the original blog and strategic optimization recommendations
+    2. **Implement Improvements:** Apply all SEO, conversion, and audience optimization suggestions
+    3. **Enhance Value Delivery:** Strengthen content value and actionability for {target_audience}
+    4. **Optimize Performance:** Maximize search visibility and conversion potential
+
+    **MANDATORY: Use File Writer Tool with EXACT file path: "content/{campaign_name}/blogs/optimized-ai-marketing-guide.md"**
+
+    **ENHANCED CONTENT REQUIREMENTS:**
+    - Implement all SEO improvements identified in the analysis
+    - Strengthen call-to-action sections with improved conversion copy
+    - Add additional value sections based on {target_audience} insights
+    - Enhance readability and user experience
+    - Include advanced optimization for featured snippets and voice search
+    - Strengthen social proof and credibility indicators
+
+    **QUALITY ASSURANCE:**
+    - Ensure enhanced version maintains brand voice: {brand_voice}
+    - Verify all recommendations from analysis are properly implemented
+    - Add strategic internal linking and content upgrades
+    - Include compelling lead magnets and conversion opportunities
+
+    Write the COMPLETE optimized article with all improvements integrated seamlessly.
+
   expected_output: >
-    A single, clean markdown document containing the final report. The report
-    must start with the main title (H1), followed by the executive summary,
-    and then the full, formatted article. Do not include '```markdown' or
-    any other code block specifiers.
-  agent: content_director
+    A fully optimized, enhanced blog post that implements all strategic recommendations
+    and delivers maximum value to {target_audience} with superior performance potential.
+  agent: content_creator
 
-performance_analysis_task:
+social_media_creation_task:
   description: >
-    Analyze the performance of the published content and provide optimization
-    recommendations. The current year is {current_year} and today's date should be used for the analysis.
+    Create exceptional, viral-ready social media content based on the optimized blog post.
+    Focus on platform-specific optimization and maximum engagement for {target_audience}.
 
-    Use the Analytics Tool to get performance data for the content titled: '{topic} Report'
+    **MANDATORY REQUIREMENTS:**
+    1. **MUST READ** the optimized blog post: content/{campaign_name}/blogs/optimized-ai-marketing-guide.md
+    2. **MUST USE File Writer Tool with EXACT file_path: "content/{campaign_name}/social-media/posts.md"**
 
-    Your analysis should include:
-    1. Key performance metrics (views, engagement rate, conversion rate, etc.)
-    2. Comparison against industry benchmarks for {target_audience}
-    3. Identification of strengths and weaknesses
-    4. Specific optimization recommendations based on the {channels} distribution channels
-    5. Decision on whether the content has met its goals within the campaign budget of ${budget}
+    **PLATFORM-SPECIFIC CONTENT STRATEGY:**
 
-    Important: Use the current year {current_year} in your analysis and ensure all dates reflect the current time period.
+    **1. LINKEDIN STRATEGIC POST (400-500 words, authority-building):**
+    - **Hook:** Industry insight or counterintuitive perspective relevant to {target_audience}
+    - **Story Arc:** Professional journey or client success story
+    - **Value Delivery:** 5-7 actionable insights from the blog content
+    - **Social Proof:** Include relevant statistics and industry data
+    - **Engagement Trigger:** Thought-provoking question that encourages professional discussion
+    - **Call-to-Action:** Strategic, business-focused action with clear value proposition
+    - **Hashtags:** 8-12 professional, industry-relevant hashtags
+    - **Brand Voice:** {brand_voice} with authoritative, expert positioning
+
+    **2. TWITTER STRATEGIC THREAD (8-10 tweets, viral potential):**
+    - **Tweet 1:** Bold claim or surprising statistic + thread indicator (🧵 1/8)
+    - **Tweets 2-7:** Key insights, each with specific value for {target_audience}
+    - **Tweet 8:** Summary with strong CTA and relevant hashtags
+    - **Optimization:** Each tweet under 280 characters with strategic emoji use
+    - **Engagement:** Include poll question, quote-worthy insights, and retweet triggers
+    - **Hashtags:** Trending and niche hashtags relevant to {target_audience}
+
+    **3. INSTAGRAM VALUE-DRIVEN CAPTION (300-400 words, community-building):**
+    - **Visual Hook:** Detailed description of accompanying carousel or video content
+    - **Personal Story:** Relatable scenario or behind-the-scenes insight
+    - **Value Bomb:** 7-10 specific tips or insights from blog content
+    - **Community Engagement:** Questions that drive meaningful comments and discussion
+    - **Story Integration:** Reference Instagram Stories for additional content
+    - **Call-to-Action:** Clear direction with bio link and DM encouragement
+    - **Hashtags:** 20-25 strategic mix of trending, niche, and branded hashtags
+
+    **4. FACEBOOK COMMUNITY POST (200-300 words, discussion-focused):**
+    - **Community Angle:** Frame content for group discussion and peer learning
+    - **Question-Based:** Start with engaging question relevant to {target_audience}
+    - **Value Sharing:** Share 3-5 key insights in discussion-friendly format
+    - **Engagement Optimization:** Encourage comments, shares, and group participation
+    - **Resource Sharing:** Reference blog post as valuable community resource
+
+    **CONTENT EXCELLENCE STANDARDS:**
+    - All posts must be specifically tailored to {target_audience} interests and challenges
+    - Include platform-specific optimization for maximum organic reach
+    - Use psychological triggers for engagement (curiosity, FOMO, social proof)
+    - Maintain brand voice: {brand_voice} while adapting to platform culture
+    - Include specific, actionable value in every post
+    - Reference current trends and industry developments (2025 context)
+
   expected_output: >
-    A detailed performance analysis report dated in {current_year} with clear metrics, insights, and
-    actionable recommendations. The report should conclude with a definitive
-    recommendation: "Success - Goals Met" or "Needs Optimization" with specific
-    areas to improve.
-  agent: performance_agent
+    4 exceptional, platform-optimized social media posts designed for maximum engagement
+    and specifically crafted to resonate with {target_audience} across all major platforms.
+  agent: content_creator
+
+email_marketing_task:
+  description: >
+    Create a comprehensive email marketing sequence that nurtures {target_audience} through
+    the customer journey with high-value content and strategic conversion opportunities.
+
+    **MANDATORY: Use File Writer Tool with EXACT file_path: "content/{campaign_name}/emails/email-sequence.md"**
+
+    **EMAIL SEQUENCE STRATEGY (5 EMAILS):**
+
+    **EMAIL 1: WELCOME & VALUE DELIVERY (400-500 words)**
+    - **Subject:** "Welcome to AI Marketing Mastery: Your 90-Day Growth Blueprint Inside"
+    - **Hook:** Immediate value with personalized welcome for {target_audience}
+    - **Value Delivery:** Share exclusive insights not available in public content
+    - **Expectation Setting:** Preview the value they'll receive in upcoming emails
+    - **First CTA:** Encourage engagement with valuable resource or tool
+    - **Brand Introduction:** Establish credibility and expertise relevant to {brand_voice}
+
+    **EMAIL 2: EDUCATIONAL DEEP-DIVE (500-600 words)**
+    - **Subject:** "The #1 Mistake 89% of {target_audience} Make with AI Marketing"
+    - **Story Opening:** Relatable client story or case study
+    - **Problem Identification:** Specific challenge relevant to {target_audience}
+    - **Solution Framework:** 5-7 step process for addressing the challenge
+    - **Resource Sharing:** Reference blog content with additional context
+    - **Social Proof:** Include testimonials or success metrics
+    - **CTA:** Direct to high-value resource or assessment
+
+    **EMAIL 3: CASE STUDY & SOCIAL PROOF (450-550 words)**
+    - **Subject:** "How [Client Name] Increased Revenue 300% with AI Marketing"
+    - **Case Study Format:** Detailed before/after transformation story
+    - **Specific Results:** Quantified outcomes relevant to {target_audience}
+    - **Implementation Details:** How the solution was applied in real business context
+    - **Lessons Learned:** Key takeaways and best practices
+    - **CTA:** Offer strategy session or detailed resource
+
+    **EMAIL 4: OBJECTION HANDLING & TRUST BUILDING (400-500 words)**
+    - **Subject:** "The Truth About AI Marketing ROI (It's Not What You Think)"
+    - **Common Objections:** Address typical concerns of {target_audience}
+    - **Myth Busting:** Correct misconceptions about {topic}
+    - **Risk Mitigation:** Show how to minimize implementation risks
+    - **Investment Perspective:** Frame as strategic business investment
+    - **CTA:** Offer consultation or detailed implementation guide
+
+    **EMAIL 5: STRATEGIC OFFER & URGENCY (350-450 words)**
+    - **Subject:** "Ready to Transform Your Marketing? Limited-Time Opportunity Inside"
+    - **Recap Value:** Summarize insights shared throughout sequence
+    - **Strategic Offer:** Present relevant service, product, or consultation
+    - **Urgency & Scarcity:** Legitimate time-sensitive or limited availability
+    - **Risk Reversal:** Strong guarantee or low-risk trial option
+    - **Clear CTA:** Simple, direct action with immediate next steps
+
+    **EMAIL OPTIMIZATION STANDARDS:**
+    - Brand voice: {brand_voice} adapted for email intimacy and directness
+    - Personalization for {target_audience} throughout all emails
+    - Mobile-optimized formatting with scannable content structure
+    - Strategic use of storytelling and emotional engagement
+    - Clear value proposition in every email
+    - Professional design suggestions for layout and visual elements
+
+  expected_output: >
+    5 complete, high-converting email marketing sequences specifically designed for {target_audience}
+    with strategic progression from awareness to conversion with compelling subject lines.
+  agent: content_creator
+
+audio_slogan_task:
+  description: >
+    Create memorable, culturally-resonant Hindi slogans for '{topic}' that deeply connect with {target_audience}
+    and generate professional audio content that enhances brand recall and emotional engagement.
+
+    **CREATIVE DEVELOPMENT STRATEGY:**
+    1. Develop 5 distinctive Hindi slogans (written in English script/transliteration)
+    2. Each slogan must emotionally resonate with {target_audience} business challenges and aspirations
+    3. Select the most impactful slogan for professional audio generation
+    4. Create slogan that aligns with brand voice: '{brand_voice}' while maintaining cultural authenticity
+
+    **MANDATORY: Use File Writer Tool with EXACT file path: "content/{campaign_name}/audio/slogans.md"**
+
+    **ENHANCED SLOGAN REQUIREMENTS:**
+
+    **Cultural & Business Context:**
+    - Focus on business transformation and success themes relevant to {target_audience}
+    - Incorporate aspirational language that speaks to growth and achievement
+    - Use conversational Hindi that feels natural and memorable
+    - Address specific pain points of automation adoption for this audience
+
+    **Creative Frameworks (Choose from these approaches):**
+
+    **1. Transformation Focus:**
+    - "Purana tarika chodo, nayi raah banao" (Leave old methods, create new paths)
+    - "Mehnat kam, kamyabi zyada" (Less effort, more success)
+    - "Automation ka jadoo, vyapar mein khushiyo ka saath" (Magic of automation, happiness in business)
+
+    **2. Empowerment & Growth:**
+    - "Sapno ko haqeeqat banane ka waqt" (Time to make dreams reality)
+    - "Chhote business, bade iraade" (Small business, big intentions)
+    - "Technology se tarakki, safalta ki nayi shuruaat" (Progress through technology, new beginning of success)
+
+    **3. Simplicity & Efficiency:**
+    - "Aasan hai, aasaan banao" (It's easy, make it easier)
+    - "Smart kaam, smart kamyabi" (Smart work, smart success)
+    - "Ek click mein, vyapar ki nayi disha" (One click, new direction for business)
+
+    **4. Innovation & Future:**
+    - "Aaj ki technology, kal ki safalta" (Today's technology, tomorrow's success)
+    - "Nayi duniya, naye mauke" (New world, new opportunities)
+    - "AI ke saath, aage badhte chalo" (With AI, keep moving forward)
+
+    **5. ROI & Results:**
+    - "Paisa vasool, vyapar bemisaal" (Money well-spent, unmatched business)
+    - "Invest karo, tarakki karo" (Invest and progress)
+    - "Kam paisa, zyada munafa" (Less money, more profit)
+
+    **SLOGAN CREATION REQUIREMENTS:**
+    - Each slogan must be 4-8 words maximum for memorability
+    - Use rhythm and alliteration where appropriate for audio appeal
+    - Ensure easy pronunciation for non-Hindi speakers
+    - Test for cultural sensitivity and business appropriateness
+    - Focus on emotional impact and memorability for {target_audience}
+
+    **AUDIO GENERATION SPECIFICATIONS:**
+    - Use the Voice Generation Tool for the BEST selected slogan
+    - Language code: "hi-IN" for authentic Hindi pronunciation
+    - Speaker: "amol" for professional, business-appropriate voice
+    - Ensure clear pronunciation and emotional delivery
+    - Audio should enhance brand memorability and emotional connection
+
+    **QUALITY STANDARDS:**
+    - Slogans must be original and trademark-safe
+    - Audio quality must be professional and broadcast-ready
+    - Cultural authenticity while maintaining business professionalism
+    - Alignment with {brand_voice} and {target_audience} preferences
+
+  expected_output: >
+    5 culturally-resonant Hindi slogans specifically crafted for {target_audience},
+    with professional audio generation of the most impactful slogan for brand enhancement.
+  agent: brand_voice_specialist
+
+final_analysis_task:
+  description: >
+    Conduct comprehensive campaign performance analysis with strategic recommendations
+    for optimization and scaling across all content and marketing channels.
+
+    **MANDATORY: Use File Writer Tool with EXACT file_path: "content/{campaign_name}/analysis/final-campaign-review.md"**
+
+    **COMPREHENSIVE CAMPAIGN ANALYSIS:**
+
+    **1. Content Quality Assessment:**
+    - **Blog Content Analysis:** Evaluate both original and optimized blog posts for SEO potential, conversion optimization, and audience value
+    - **Social Media Content Review:** Assess engagement potential and platform-specific optimization across all posts
+    - **Email Sequence Evaluation:** Analyze conversion potential, sequence flow, and audience nurturing effectiveness
+    - **Audio Branding Assessment:** Evaluate slogan memorability and brand alignment
+
+    **2. Target Audience Alignment Analysis:**
+    - Assess how effectively all content addresses {target_audience} specific needs
+    - Evaluate language, tone, and messaging consistency for audience appropriateness
+    - Identify content gaps or opportunities for better audience engagement
+    - Recommend enhancements for audience-specific personalization
+
+    **3. Cross-Platform Integration & Consistency:**
+    - Analyze brand voice consistency across all content pieces
+    - Evaluate message alignment and strategic coherence
+    - Assess cross-promotion opportunities between content types
+    - Identify synergies for integrated campaign amplification
+
+    **4. Performance Projections & ROI Analysis:**
+    - **SEO Performance:** Estimated organic traffic potential and ranking probability for blog content
+    - **Social Engagement:** Projected reach, engagement rates, and viral potential for social content
+    - **Email Marketing:** Conversion rate projections and lead nurturing effectiveness
+    - **Brand Awareness:** Audio content impact on brand recall and memorability
+
+    **5. Competitive Advantage Assessment:**
+    - Evaluate unique positioning and differentiation opportunities
+    - Identify competitive strengths and potential market positioning
+    - Recommend strategic angles for market leadership
+
+    **6. Optimization & Scaling Recommendations:**
+    - **Immediate Optimizations:** Quick wins for content improvement (next 30 days)
+    - **Medium-term Enhancements:** Strategic improvements for growth (30-90 days)
+    - **Long-term Scaling Strategy:** Campaign expansion and market leadership (90+ days)
+    - **Resource Requirements:** Budget, team, and tool recommendations for implementation
+
+    **7. Implementation Roadmap:**
+    - **Phase 1:** Content publishing and initial optimization
+    - **Phase 2:** Performance monitoring and iterative improvement
+    - **Phase 3:** Scaling and advanced strategies
+    - Include specific KPIs and success metrics for each phase
+
+    **STRATEGIC RECOMMENDATIONS:**
+    - Provide specific, actionable recommendations with expected impact and implementation difficulty
+    - Include ROI projections and resource requirements for each recommendation
+    - Prioritize recommendations by potential impact and alignment with {target_audience} needs
+    - Include overall campaign quality score and competitive positioning assessment
+
+  expected_output: >
+    Comprehensive strategic campaign analysis with detailed performance projections,
+    optimization roadmap, and actionable recommendations for sustainable growth and market leadership.
+  agent: performance_analyst

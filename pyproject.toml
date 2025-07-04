@@ -9,4 +9,6 @@ dependencies = [
     "crewai-tools>=0.48.0",
     "google-search-results>=2.4.2",
     "langsmith>=0.3.45",
+    "sarvamai>=0.1.9",
+    "streamlit>=1.46.1",
 ]

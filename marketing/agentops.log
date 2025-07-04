@@ -1,9 +1,8 @@
-2025-06-30 09:47:11,748 - INFO - [ConcurrentFuturesInstrumentor] Successfully instrumented concurrent.futures.ThreadPoolExecutor
-2025-06-30 09:47:11,750 - INFO - AgentOps: Successfully instrumented 'ConcurrentFuturesInstrumentor' for package 'python'.
-2025-06-30 09:47:11,760 - INFO - AgentOps: 'crewai' is the first-targeted agentic library. Will uninstrument providers if any are/become active.
-2025-06-30 09:47:11,851 - INFO - AgentOps: Successfully instrumented 'CrewaiInstrumentor' for package 'agentops.instrumentation.agentic.crewai'.
-2025-06-30 09:47:11,853 - INFO - Session Replay for default trace: https://app.agentops.ai/sessions?trace_id=e839cb3c0409baa3654580954db88886
-2025-06-30 09:47:17,077 - WARNING - ToolEvent() is deprecated and will be removed in v4 in the future. Automatically tracked in v4.
-2025-06-30 09:47:17,122 - WARNING - ErrorEvent() is deprecated and will be removed in v4 in the future. Automatically tracked in v4.
-2025-06-30 09:51:49,868 - WARNING - end_session() is deprecated and will be removed in v4 in the future. Use agentops.end_trace() instead.
-2025-06-30 09:51:50,347 - INFO - Session Replay for default.session trace: https://app.agentops.ai/sessions?trace_id=e839cb3c0409baa3654580954db88886
+2025-07-04 09:39:40,033 - INFO - [ConcurrentFuturesInstrumentor] Successfully instrumented concurrent.futures.ThreadPoolExecutor
+2025-07-04 09:39:40,040 - INFO - AgentOps: Successfully instrumented 'ConcurrentFuturesInstrumentor' for package 'python'.
+2025-07-04 09:39:40,058 - INFO - AgentOps: 'crewai' is the first-targeted agentic library. Will uninstrument providers if any are/become active.
+2025-07-04 09:39:40,158 - INFO - AgentOps: Successfully instrumented 'CrewaiInstrumentor' for package 'agentops.instrumentation.agentic.crewai'.
+2025-07-04 09:39:40,158 - INFO - Session Replay for default trace: https://app.agentops.ai/sessions?trace_id=e2e11e083547ad729b7b22e8eead3500
+2025-07-04 09:40:15,471 - WARNING - ToolEvent() is deprecated and will be removed in v4 in the future. Automatically tracked in v4.
+2025-07-04 09:44:20,587 - WARNING - end_session() is deprecated and will be removed in v4 in the future. Use agentops.end_trace() instead.
+2025-07-04 09:44:21,039 - INFO - Session Replay for default.session trace: https://app.agentops.ai/sessions?trace_id=e2e11e083547ad729b7b22e8eead3500
