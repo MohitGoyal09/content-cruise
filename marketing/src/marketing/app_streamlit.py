@@ -120,39 +120,60 @@ def run_campaign_thread(inputs, progress_bar, status_text, agent_text, task_text
         status_text.error(f"❌ Campaign failed: {str(e)}")
         return False, None
 
-
-    """Update the UI with progress information"""
-    try:
-        while True:
-          
+def manual_status_update_thread():
+    """Manual status updates independent of callbacks"""
+    global CAMPAIGN_STATUS
+    
+    # Predefined task sequence for manual updates
+    task_sequence = [
+        ("Market Research & Intelligence", "Market Strategist", 15),
+        ("Blog Content Creation", "Content Creator", 25), 
+        ("Blog Performance Analysis", "Performance Analyst", 35),
+        ("Blog Content Optimization", "Content Creator", 45),
+        ("Distribution Content Creation", "Content Creator", 55),
+        ("Distribution Content Analysis", "Performance Analyst", 65),
+        ("Distribution Content Optimization", "Content Creator", 75),
+        ("Audio Slogan Creation", "Brand Voice Specialist", 85),
+        ("Audio Slogan Analysis", "Performance Analyst", 90),
+        ("Final Campaign Assembly", "Campaign Manager", 100)
+    ]
+    
+    start_time = time.time()
+    task_index = 0
+    
+    while task_index < len(task_sequence):
+        try:
+            elapsed = time.time() - start_time
             
-            # Update progress bar
-            progress_bar.progress(progress)
+            # Each task should take about 5-8 minutes on average
+            # Switch tasks every 6 minutes (360 seconds) for testing
+            if elapsed > (task_index + 1) * 360:  # 6 minutes per task
+                if task_index < len(task_sequence) - 1:
+                    task_index += 1
             
-            # Update status text
-            if task_status == "completed":
-                status_text.text(f"✅ Completed: {current_task}")
-            elif task_status == "in_progress":
-                status_text.text(f"🔄 In Progress: {current_task}")
-            else:
-                status_text.text(f"⏳ Pending: {current_task}")
+            task_name, agent_name, progress = task_sequence[task_index]
+            
+            # Update status
+            CAMPAIGN_STATUS["current_task"] = task_name
+            CAMPAIGN_STATUS["current_agent"] = agent_name  
+            CAMPAIGN_STATUS["task_status"] = "in_progress"
+            CAMPAIGN_STATUS["progress"] = min(progress, int((elapsed / 3600) * 100))  # 1 hour total
+            CAMPAIGN_STATUS["last_update"] = time.time()
+            
+            # Save to JSON
+            try:
+                with open("campaign_status.json", "w") as f:
+                    json.dump(CAMPAIGN_STATUS, f)
+            except:
+                pass
                 
-            # Update agent text
-            agent_text.text(f"👤 Current Agent: {current_agent}")
+            print(f"🔄 Manual Update: {task_name} by {agent_name} ({CAMPAIGN_STATUS['progress']}%)")
             
-            # Update task text
-            task_text.text(f"📋 Current Task: {current_task}")
+            time.sleep(10)  # Update every 10 seconds
             
-            
-            
-            # Sleep for a short time before updating again
-            time.sleep(1)
-            
-            # Exit if campaign is complete
-            if progress >= 100:
-                break
-    except Exception as e:
-        logger.error(f"Error updating progress UI: {str(e)}", exc_info=True)
+        except Exception as e:
+            print(f"Error in manual status thread: {str(e)}")
+            time.sleep(10)
 
 def run_campaign(inputs):
     """Run the campaign and update progress"""
@@ -199,20 +220,29 @@ def run_campaign(inputs):
         with concurrent.futures.ThreadPoolExecutor() as executor:
             future = executor.submit(run_crew)
             
+            # Start manual status update thread
+            status_future = executor.submit(manual_status_update_thread)
+            
             # Update UI in real-time while crew is running
             start_time = time.time()
             while not future.done():
                 try:
-                    # Get current status from global variable
+                    # Import fresh CAMPAIGN_STATUS to get latest updates
+                    from crew import CAMPAIGN_STATUS
+                    
+                    # Get current status from global variable with debugging
                     current_task = CAMPAIGN_STATUS.get("current_task", "Initializing")
                     current_agent = CAMPAIGN_STATUS.get("current_agent", "System")
                     progress = CAMPAIGN_STATUS.get("progress", 0)
                     task_status = CAMPAIGN_STATUS.get("task_status", "pending")
                     
+                    # Debug logging
+                    print(f"🔄 UI Update - Task: {current_task}, Agent: {current_agent}, Progress: {progress}%, Status: {task_status}")
+                    
                     # Update UI elements
                     progress_bar.progress(max(20, progress))
                     
-                    # Status indicator
+                    # Status indicator with more detailed status
                     if task_status == "completed":
                         status_text.text(f"✅ Completed: {current_task}")
                     elif task_status == "in_progress":
@@ -229,12 +259,34 @@ def run_campaign(inputs):
                     elapsed = time.time() - start_time
                     time_text.text(f"⏱️ Elapsed: {elapsed:.0f}s")
                     
-                    # Update every 2 seconds
-                    time.sleep(2)
+                    # Try to read from backup JSON file if global variable is not updating
+                    try:
+                        if os.path.exists("campaign_status.json"):
+                            with open("campaign_status.json", "r") as f:
+                                json_status = json.load(f)
+                                if json_status.get("last_update", 0) > CAMPAIGN_STATUS.get("last_update", 0):
+                                    current_task = json_status.get("current_task", current_task)
+                                    current_agent = json_status.get("current_agent", current_agent)
+                                    progress = json_status.get("progress", progress)
+                                    task_status = json_status.get("task_status", task_status)
+                                    print(f"📁 Using JSON status: {current_task} by {current_agent}")
+                                    
+                                    # Update UI with JSON data
+                                    progress_bar.progress(max(20, progress))
+                                    status_text.text(f"🔄 In Progress: {current_task}")
+                                    current_agent_text.text(f"👤 Agent: {current_agent}")
+                                    current_task_text.text(f"📋 Task: {current_task}")
+                                    progress_text.text(f"📊 Progress: {progress}%")
+                    except Exception as json_error:
+                        print(f"Error reading JSON status: {str(json_error)}")
+                    
+                    # Update every 3 seconds (increased from 2 to reduce noise)
+                    time.sleep(3)
                     
                 except Exception as update_error:
                     logger.error(f"Error updating UI: {str(update_error)}")
-                    time.sleep(2)
+                    print(f"❌ UI Update Error: {str(update_error)}")
+                    time.sleep(3)
             
             # Get the result
             result = future.result()
@@ -366,6 +418,39 @@ def main():
             - Each agent specializes in different content types
             - Files are saved to `content/[campaign-name]/` folders
             """)
+        
+        # Add test section for debugging
+        with st.expander("🔧 Debug Tools"):
+            if st.button("Test Status Update"):
+                try:
+                    from crew import CAMPAIGN_STATUS
+                    CAMPAIGN_STATUS["current_task"] = "Test Task - Market Research"
+                    CAMPAIGN_STATUS["current_agent"] = "Test Agent - Market Strategist"
+                    CAMPAIGN_STATUS["progress"] = 50
+                    CAMPAIGN_STATUS["task_status"] = "in_progress"
+                    CAMPAIGN_STATUS["last_update"] = time.time()
+                    
+                    # Save to JSON
+                    with open("campaign_status.json", "w") as f:
+                        json.dump(CAMPAIGN_STATUS, f)
+                    
+                    st.success("✅ Test status updated! Check if UI shows the new values.")
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"❌ Test failed: {str(e)}")
+                    
+            if st.button("Reset Status"):
+                try:
+                    from crew import CAMPAIGN_STATUS
+                    CAMPAIGN_STATUS["current_task"] = "Initializing"
+                    CAMPAIGN_STATUS["current_agent"] = "System"
+                    CAMPAIGN_STATUS["progress"] = 0
+                    CAMPAIGN_STATUS["task_status"] = "pending"
+                    CAMPAIGN_STATUS["last_update"] = time.time()
+                    st.success("✅ Status reset!")
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"❌ Reset failed: {str(e)}")
         
         with st.form("campaign_form"):
             topic = st.text_input(

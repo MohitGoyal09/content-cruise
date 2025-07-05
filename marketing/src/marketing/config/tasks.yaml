@@ -488,8 +488,11 @@ distribution_content_optimization_task:
 
 audio_slogan_task:
   description: >
+    CREATE HINDI SLOGANS ONLY - NO ENGLISH SLOGANS ALLOWED.
     Create memorable, culturally-resonant Hindi slogans for '{topic}' that deeply connect with {target_audience}
     and generate professional audio content that enhances brand recall and emotional engagement.
+    
+    CRITICAL: ALL SLOGANS MUST BE IN HINDI LANGUAGE. English slogans are NOT allowed.
 
     **CREATIVE DEVELOPMENT STRATEGY:**
     1. Develop 5 distinctive Hindi slogans (written in English script/transliteration)
