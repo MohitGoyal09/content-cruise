@@ -182,12 +182,15 @@ git --version
 
 ```bash
 # 1. Clone the repository
-git clone <repository-url>
+git clone https://github.com/MohitGoyal09/deep-dive
 cd deep-dive
 
 # 2. Install dependencies
+uv sync
+.venv/Scripts/activate # On Windows
+source .venv/bin/activate # On macOS/Linux
+
 cd marketing
-pip install -r requirements.txt
 
 # 3. Set up environment variables
 export GOOGLE_API_KEY=your_gemini_key
@@ -211,7 +214,7 @@ GOOGLE_API_KEY=your_gemini_api_key
 MISTRAL_API_KEY=your_mistral_api_key
 SARVAM_API_KEY=your_sarvam_api_key
 SERPER_API_KEY=your_serper_api_key
-AGENTOPS_API_KEY=your_agentops_key (optional)
+AGENTOPS_API_KEY=your_agentops_key 
 ```
 
 ---
@@ -324,37 +327,6 @@ custom_agent:
 - [ ] White-label solutions
 
 ---
-
-## 🤝 **Contributing**
-
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
-
-### **Development Setup**
-
-```bash
-# Clone repository
-git clone <repository-url>
-cd deep-dive/marketing
-
-# Install development dependencies
-pip install -r requirements-dev.txt
-
-# Run tests
-python -m pytest tests/
-
-# Code formatting
-black src/
-flake8 src/
-```
-
----
-
-## 📄 **License**
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
 ## 🏆 **Hackathon Submission**
 
 ### **Innovation Points**
@@ -386,8 +358,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 For questions, issues, or collaboration opportunities:
 
 - **GitHub Issues**: [Create an issue](../../issues)
-- **Email**: [Contact form]
-- **Documentation**: [Full documentation](docs/)
+- **Email**: mohitgoyal09042006@gmail.com
 - **Demo**: [Live demo link]
 
 ---
