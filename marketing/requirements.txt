@@ -1,5 +1,0 @@
-streamlit>=1.28.0
-crewai
-crewai-tools
-python-dotenv
-pathlib 
