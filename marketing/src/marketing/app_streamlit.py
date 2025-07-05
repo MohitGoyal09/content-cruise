@@ -3,6 +3,7 @@ import os
 import sys
 import time
 import threading
+import json
 from datetime import datetime, timedelta
 from pathlib import Path
 import base64
@@ -10,7 +11,7 @@ import logging
 
 # Add the parent directory to the path to import the crew
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
-from crew import Marketing
+from crew import Marketing, CAMPAIGN_STATUS
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -33,16 +34,29 @@ def generate_campaign_name(topic, target_audience):
         if not target_audience or not target_audience.strip():
             target_audience = "general-audience"
         
-        topic_clean = topic.strip().lower().replace(" ", "-").replace("'", "").replace("/", "-").replace("\\", "-")
+        # Clean topic more aggressively to avoid file path issues
+        topic_clean = topic.strip().lower()
+        # Remove special characters that can cause path issues
+        topic_clean = topic_clean.replace("(", "").replace(")", "")
+        topic_clean = topic_clean.replace("[", "").replace("]", "")
+        topic_clean = topic_clean.replace("{", "").replace("}", "")
+        topic_clean = topic_clean.replace("'", "").replace('"', "")
+        topic_clean = topic_clean.replace("/", "-").replace("\\", "-")
+        topic_clean = topic_clean.replace(":", "-").replace(";", "-")
+        topic_clean = topic_clean.replace(" ", "-")
+        # Replace multiple hyphens with single hyphen
+        topic_clean = "-".join(filter(None, topic_clean.split("-")))
+        
         audience_words = target_audience.strip().split()
         audience_clean = audience_words[0].lower() if audience_words else "general"
         current_year = datetime.now().year
         campaign_name = f"{topic_clean}-{audience_clean}-{current_year}"
         
-        #
+        # Final validation
         if not campaign_name or campaign_name in ["-", "--", "---"]:
             campaign_name = f"campaign-{current_year}-{int(time.time())}"
         
+        logger.info(f"Generated campaign name: {campaign_name}")
         return campaign_name
     except Exception as e:
         logger.error(f"Error generating campaign name: {str(e)}")
@@ -145,35 +159,91 @@ def run_campaign(inputs):
     try:
         # Initialize progress UI elements
         progress_bar = st.progress(0)
-        status_text = st.empty()
+        status_container = st.container()
+        
+        with status_container:
+            status_text = st.empty()
+            agent_col, task_col = st.columns(2)
+            with agent_col:
+                current_agent_text = st.empty()
+            with task_col:
+                current_task_text = st.empty()
+            
+            progress_text = st.empty()
+            time_text = st.empty()
         
         status_text.text("🚀 Initializing campaign...")
+        current_agent_text.text("👤 Agent: System")
+        current_task_text.text("📋 Task: Initialization")
         progress_bar.progress(10)
         
         validated_campaign_name = create_directories(inputs['campaign_name'])
         inputs['campaign_name'] = validated_campaign_name  # Update with validated name
         os.environ["CAMPAIGN_NAME"] = validated_campaign_name
         
-        status_text.text("📊 Starting market research...")
+        status_text.text("📊 Starting campaign...")
         progress_bar.progress(20)
         
         # Initialize and run crew
         crew_instance = Marketing()
         
-        status_text.text("✍️ Generating content...")
-        progress_bar.progress(40)
+        # Create a placeholder for real-time updates
+        update_placeholder = st.empty()
         
-        # Run the crew in a separate thread to avoid blocking
-        with st.spinner("🤖 AI agents are working on your campaign..."):
-            result = crew_instance.crew().kickoff(inputs=inputs)
+        # Run the crew in a separate thread
+        def run_crew():
+            return crew_instance.crew().kickoff(inputs=inputs)
         
-        status_text.text("🎨 Finalizing content...")
-        progress_bar.progress(90)
-        
-        time.sleep(1)  # Small delay for completion effect
+        # Start the crew in a thread
+        import concurrent.futures
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            future = executor.submit(run_crew)
+            
+            # Update UI in real-time while crew is running
+            start_time = time.time()
+            while not future.done():
+                try:
+                    # Get current status from global variable
+                    current_task = CAMPAIGN_STATUS.get("current_task", "Initializing")
+                    current_agent = CAMPAIGN_STATUS.get("current_agent", "System")
+                    progress = CAMPAIGN_STATUS.get("progress", 0)
+                    task_status = CAMPAIGN_STATUS.get("task_status", "pending")
+                    
+                    # Update UI elements
+                    progress_bar.progress(max(20, progress))
+                    
+                    # Status indicator
+                    if task_status == "completed":
+                        status_text.text(f"✅ Completed: {current_task}")
+                    elif task_status == "in_progress":
+                        status_text.text(f"🔄 In Progress: {current_task}")
+                    else:
+                        status_text.text(f"⏳ Working on: {current_task}")
+                    
+                    # Current agent and task
+                    current_agent_text.text(f"👤 Agent: {current_agent}")
+                    current_task_text.text(f"📋 Task: {current_task}")
+                    
+                    # Progress and time info
+                    progress_text.text(f"📊 Progress: {progress}%")
+                    elapsed = time.time() - start_time
+                    time_text.text(f"⏱️ Elapsed: {elapsed:.0f}s")
+                    
+                    # Update every 2 seconds
+                    time.sleep(2)
+                    
+                except Exception as update_error:
+                    logger.error(f"Error updating UI: {str(update_error)}")
+                    time.sleep(2)
+            
+            # Get the result
+            result = future.result()
         
         status_text.text("✅ Campaign completed successfully!")
+        current_agent_text.text("👤 Agent: System")
+        current_task_text.text("📋 Task: Completed")
         progress_bar.progress(100)
+        progress_text.text("📊 Progress: 100%")
         
         return True, inputs['campaign_name']
         
@@ -282,6 +352,20 @@ def main():
     # Sidebar for campaign creation
     with st.sidebar:
         st.header("🎯 New Campaign")
+        
+        # Add helpful tips
+        with st.expander("💡 Tips for Better Campaigns"):
+            st.markdown("""
+            **For better file generation:**
+            - Use simple topic names without special characters
+            - Avoid parentheses, brackets, and complex punctuation
+            - Campaign names are automatically cleaned for file paths
+            
+            **Real-time Progress:**
+            - Watch the agent progress in real-time
+            - Each agent specializes in different content types
+            - Files are saved to `content/[campaign-name]/` folders
+            """)
         
         with st.form("campaign_form"):
             topic = st.text_input(

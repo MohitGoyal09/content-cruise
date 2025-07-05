@@ -33,15 +33,25 @@ campaign_management_task:
 
 market_research_task:
   description: >
-    Conduct comprehensive market intelligence analysis for '{topic}' targeting {target_audience}.
-    Deliver strategic insights that inform all campaign decisions and competitive positioning.
+    CRITICAL TASK: You are a market research specialist. Your ONLY job is to create 3 separate market research files. 
+    DO NOT create blog content. DO NOT mix market research with blog content.
+    
+    **TASK OBJECTIVE:** Create 3 separate market research files about '{topic}' targeting {target_audience}.
 
-    **MANDATORY: Use File Writer Tool with these EXACT file paths for each analysis:**
+    **IMPORTANT: This task has NOTHING to do with blog creation. You are ONLY doing market research.**
 
-    **STEP 1: Competitive Intelligence Analysis**
-    **File path: "content/{campaign_name}/market_research/competitors.md"**
+    **EXECUTION WORKFLOW:**
+    1. First, research competitors using Search tool
+    2. Create competitors.md file using File Writer Tool
+    3. Research keywords using Search tool  
+    4. Create keywords.md file using File Writer Tool
+    5. Research audience using Search tool
+    6. Create audience.md file using File Writer Tool
 
-    Create comprehensive competitive analysis including:
+    **STEP 1: CREATE COMPETITORS FILE**
+    **MANDATORY: Use File Writer Tool with EXACT file_path: "content/{campaign_name}/market_research/competitors.md"**
+    
+    Research and create comprehensive competitive analysis including:
     - **Primary Competitors:** Identify 8-10 direct competitors in the {topic} space
     - **Competitive Positioning:** Analyze pricing strategies, target markets, and value propositions
     - **Market Share Analysis:** Estimated market position and growth trajectories
@@ -50,10 +60,10 @@ market_research_task:
     - **Strategic Recommendations:** Actionable insights for competitive advantage
     - **Target Audience Overlap:** How competitors address similar audience segments to {target_audience}
 
-    **STEP 2: Strategic Keyword & SEO Analysis**
-    **File path: "content/{campaign_name}/market_research/keywords.md"**
-
-    Create comprehensive keyword strategy including:
+    **STEP 2: CREATE KEYWORDS FILE**
+    **MANDATORY: Use File Writer Tool with EXACT file_path: "content/{campaign_name}/market_research/keywords.md"**
+    
+    Research and create comprehensive keyword strategy including:
     - **Primary Keywords:** 20 high-value keywords with search volume and competition analysis
     - **Long-tail Opportunities:** 25 long-tail keywords specifically relevant to {target_audience}
     - **Competitor Keyword Gaps:** Keywords competitors rank for that we should target
@@ -62,10 +72,10 @@ market_research_task:
     - **Seasonal Trends:** Keyword performance patterns and timing opportunities
     - **Voice Search Optimization:** Natural language keywords for voice search
 
-    **STEP 3: Target Audience Deep Dive**
-    **File path: "content/{campaign_name}/market_research/audience.md"**
-
-    Create comprehensive audience analysis for {target_audience}:
+    **STEP 3: CREATE AUDIENCE FILE**
+    **MANDATORY: Use File Writer Tool with EXACT file_path: "content/{campaign_name}/market_research/audience.md"**
+    
+    Research and create comprehensive audience analysis for {target_audience}:
     - **Detailed Persona Development:** Demographics, psychographics, and behavioral patterns
     - **Pain Points Analysis:** 10 specific challenges this audience faces with {topic}
     - **Goals & Aspirations:** What success looks like for this audience segment
@@ -75,21 +85,41 @@ market_research_task:
     - **Success Metrics:** How this audience measures ROI and success
     - **Cultural Considerations:** Relevant cultural context for effective communication
 
-    **QUALITY REQUIREMENTS:**
+    **STRICT EXECUTION REQUIREMENTS:**
+    - You MUST use Search tool before creating each file to get current data
+    - You MUST call File Writer Tool exactly 3 times, once for each file
+    - Each file must be saved with the exact file paths specified above
+    - Do NOT create any blog content in this task
+    - Do NOT combine multiple analyses into one file
+    - Each file must contain 300-500 words of detailed, researched content
     - Each analysis must be data-driven with specific insights and actionable recommendations
     - Include quantitative data where possible (market size, growth rates, volumes)
     - Focus on insights that directly inform content strategy and positioning
     - Ensure all recommendations are specifically tailored to {target_audience}
+    
+    **QUALITY STANDARDS:**
+    - Each file must be complete and standalone
+    - No placeholder text or templates
+    - Must include specific company names, data points, and actionable insights
+    - Professional markdown formatting with proper headers and structure
 
   expected_output: >
-    3 comprehensive market intelligence reports providing strategic foundation for entire campaign,
-    with actionable insights specifically focused on {target_audience} opportunities.
+    3 separate markdown files must be created using File Writer Tool:
+    1. competitors.md - comprehensive competitive analysis
+    2. keywords.md - strategic keyword and SEO analysis  
+    3. audience.md - detailed target audience analysis
+    All files must be saved to content/{campaign_name}/market_research/ directory.
   agent: market_strategist
 
 blog_creation_task:
   description: >
-    Create an exceptional, high-converting blog post about '{topic}' specifically designed for {target_audience}.
+    CRITICAL TASK: You are a blog content writer. Your ONLY job is to create ONE blog post file. 
+    DO NOT create market research content. DO NOT mix blog content with market research.
+    
+    **TASK OBJECTIVE:** Create an exceptional, high-converting blog post about '{topic}' specifically designed for {target_audience}.
     Focus on delivering measurable value while optimizing for search visibility and conversion.
+
+    **IMPORTANT: This task has NOTHING to do with market research. You are ONLY writing a blog post.**
 
     **MANDATORY: Use File Writer Tool with EXACT file path: "content/{campaign_name}/blogs/ai-marketing-guide.md"**
 
@@ -99,6 +129,8 @@ blog_creation_task:
     "The Complete AI Marketing Automation Guide for {target_audience}: Transform Your Business in 2025"
 
     **Content Structure (1500-2000 words):**
+    
+    **CRITICAL: Start the blog post with the title. Do NOT include any market research sections like "# Competitors Analysis" or "# Keywords Analysis" - these belong in separate files.**
 
     **1. Compelling Hook (150-200 words)**
     - Start with surprising statistic or provocative question relevant to {target_audience}
@@ -145,6 +177,13 @@ blog_creation_task:
     - Include data, statistics, and concrete examples throughout
     - Write with authority while remaining accessible and actionable
     - Ensure content positions reader for immediate implementation
+    
+    **STRICT CONTENT REQUIREMENTS:**
+    - Do NOT include market research sections in the blog post
+    - Do NOT add "# Competitors Analysis" or "# Keywords Analysis" sections
+    - Do NOT add "# Audience Analysis" sections
+    - Focus ONLY on blog content about {topic}
+    - The blog post should be a standalone article, not a research report
 
   expected_output: >
     Publication-ready 1500-2000 word blog post optimized for search rankings and conversion,
@@ -505,7 +544,7 @@ audio_slogan_task:
     **AUDIO GENERATION SPECIFICATIONS:**
     - Use the Voice Generation Tool for the BEST selected slogan
     - Language code: "hi-IN" for authentic Hindi pronunciation
-    - Speaker: "amol" for professional, business-appropriate voice
+    - Speaker: "anushka" for professional, business-appropriate voice
     - Ensure clear pronunciation and emotional delivery
     - Audio should enhance brand memorability and emotional connection
 

@@ -14,10 +14,6 @@ import json
 logging.basicConfig(level=logging.WARNING)
 
 from src.marketing.tools.voice_generation import VoiceGenerationTool
-from src.marketing.tools.analytics_tool import AnalyticsTool
-from src.marketing.tools.competitor_analysis_tool import CompetitorAnalysisTool
-from src.marketing.tools.seo_tool import SEOAnalysisTool
-from src.marketing.tools.social_media_tool import SocialMediaTool
 from src.marketing.tools.fixed_file_read_tool import FixedFileReadTool
 from src.marketing.tools.fixed_file_writer_tool import FixedFileWriterTool
 
@@ -43,6 +39,19 @@ gemini_llm = LLM(
     retry_delay=60,
     fallback_models=["gemini/gemini-1.5-flash-001"]
 )
+
+# Global campaign status tracking
+CAMPAIGN_STATUS = {
+    "current_task": "Initializing",
+    "current_agent": "System",
+    "task_status": "pending",
+    "completed_tasks": [],
+    "progress": 0,
+    "total_tasks": 10,  # Total number of tasks in the campaign
+    "start_time": 0,
+    "last_update": 0,
+    "estimated_completion": 0
+}
 
 @CrewBase
 class Marketing():
@@ -77,6 +86,28 @@ class Marketing():
     """
     agents_config = 'config/agents.yaml'
     tasks_config = 'config/tasks.yaml'
+    
+    # Task and Agent friendly names for UI display
+    task_descriptions = {
+        'market_research_task': 'Market Research & Intelligence',
+        'blog_creation_task': 'Blog Content Creation',
+        'blog_analysis_task': 'Blog Performance Analysis',
+        'blog_optimization_task': 'Blog Content Optimization',
+        'distribution_content_creation_task': 'Distribution Content Creation',
+        'distribution_content_analysis_task': 'Distribution Content Analysis',
+        'distribution_content_optimization_task': 'Distribution Content Optimization',
+        'audio_slogan_task': 'Audio Slogan Creation',
+        'audio_slogan_analysis_task': 'Audio Slogan Analysis',
+        'final_report_assembly_task': 'Final Campaign Assembly'
+    }
+    
+    agent_descriptions = {
+        'Senior Market Intelligence Director & Competitive Strategy Expert': 'Market Strategist',
+        'Senior Content Creator & Editorial Director': 'Content Creator',
+        'Senior Performance Analyst & Strategic Optimization Expert': 'Performance Analyst',
+        'Senior Brand Voice Specialist & Audio Content Creator': 'Brand Voice Specialist',
+        'Senior Campaign Manager & Strategic Orchestrator': 'Campaign Manager'
+    }
     @agent
     def campaign_manager(self) -> Agent:
         return Agent(
@@ -96,8 +127,8 @@ class Marketing():
             tools=[SerperDevTool(), FixedFileWriterTool()],
             llm=mistral_llm,
             verbose=True,
-            max_iterations=8,
-            max_execution_time=1800,
+            max_iterations=10,
+            max_execution_time=2400,
             allow_delegation=False,
             max_retry_limit=5
         )
@@ -146,8 +177,8 @@ class Marketing():
         return Task(
             config=self.tasks_config['market_research_task'],
             agent=self.market_strategist(),
-            expected_output="3 concise markdown files with essential research data completed in under 3 minutes.",
-            description="CRITICAL TASK: Create market research files for competitors, keywords, and audience analysis."
+            expected_output="MANDATORY: 3 separate markdown files MUST be created: competitors.md, keywords.md, audience.md in market_research folder",
+            description="CRITICAL: Create exactly 3 files using File Writer Tool. Task fails if any file missing. Do NOT create blog content."
         )
 
     @task
@@ -155,7 +186,8 @@ class Marketing():
         return Task(
             config=self.tasks_config['blog_creation_task'],
             agent=self.content_creator(),
-            expected_output="Complete 1200-word blog post ready for publishing in under 5 minutes."
+            expected_output="Complete 1500-2000 word blog post ready for publishing. NO market research content included.",
+            description="BLOG CONTENT ONLY: Create ONE blog post file. Do NOT create market research content. Do NOT mix blog with research."
         )
 
     @task
@@ -179,7 +211,8 @@ class Marketing():
         return Task(
             config=self.tasks_config['distribution_content_creation_task'],
             agent=self.content_creator(),
-            expected_output="Two comprehensive files: posts_v1.md with 4 platform-optimized social media posts and email-sequence_v1.md with complete 5-email customer journey sequence."
+            expected_output="MANDATORY: 2 files MUST be created: posts_v1.md in social-media folder AND email-sequence_v1.md in emails folder",
+            description="CRITICAL: Create exactly 2 files using File Writer Tool. Task fails if any file missing."
         )
 
     @task
@@ -203,7 +236,8 @@ class Marketing():
         return Task(
             config=self.tasks_config['audio_slogan_task'],
             agent=self.brand_voice_specialist(),
-            expected_output="5 culturally-resonant Hindi slogans with professional audio generation of the most impactful slogan."
+            expected_output="MANDATORY: 1 file MUST be created: slogans.md in audio folder AND audio file generated",
+            description="CRITICAL: Create slogans.md file using File Writer Tool AND generate audio using Voice Generation Tool"
         )
 
     @task
@@ -270,39 +304,108 @@ class Marketing():
         print(f"✅ Task completed: {friendly_task_name} by {friendly_agent_name}")
         print(f"📊 Progress: {CAMPAIGN_STATUS['progress']}% complete")
         
+        # Validate task completion
+        campaign_name = os.getenv("CAMPAIGN_NAME", "default-campaign")
+        validation_passed = self._validate_task_completion(task_name, campaign_name)
+        
+        if not validation_passed:
+            print(f"❌ CRITICAL ERROR: Task {friendly_task_name} did not create required files!")
+            print(f"🔄 This may cause subsequent tasks to fail!")
+        
         time.sleep(5)
         
-        # Handle market research task specific logic
-        if "market_research" in task_name.lower():
-            campaign_name = os.getenv("CAMPAIGN_NAME")
-            if not campaign_name or campaign_name.strip() in ["", "None", "null"]:
-                from datetime import datetime
-                current_year = datetime.now().year
-                campaign_name = f"fallback-campaign-{current_year}-{int(time.time())}"
-                os.environ["CAMPAIGN_NAME"] = campaign_name
-                print(f"⚠️ Using fallback campaign name: {campaign_name}")
-            research_dir = f"content/{campaign_name}/market_research"
-            if not os.path.exists(research_dir):
-                os.makedirs(research_dir, exist_ok=True)
-                print(f"⚠️ Created missing directory: {research_dir}")
-            expected_files = ["competitors.md", "keywords.md", "audience.md"]
-            missing_files = []
-            for file in expected_files:
-                file_path = os.path.join(research_dir, file)
-                if not os.path.exists(file_path):
-                    missing_files.append(file)
-            if missing_files:
-                print(f"⚠️ Missing market research files: {', '.join(missing_files)}")
-                print("⚠️ Creating placeholder files to be regenerated...")
-                for file in missing_files:
-                    file_path = os.path.join(research_dir, file)
-                    with open(file_path, "w") as f:
-                        f.write(f"# {file.replace('.md', '').title()} Research\n\n")
-                        f.write("This file needs to be regenerated.\n")
         return task_output
+
+    def _step_callback(self, step_output):
+        """Callback for individual steps within tasks"""
+        if hasattr(step_output, 'agent') and hasattr(step_output.agent, 'role'):
+            agent_role = step_output.agent.role
+            action = getattr(step_output, 'action', 'Unknown action')
+            print(f"🔄 Step: {agent_role} - {action}")
+        return step_output
+
+    def _validate_task_completion(self, task_name, campaign_name):
+        """Validate that required files were created for each task"""
+        validation_rules = {
+            "market_research": {
+                "files": ["competitors.md", "keywords.md", "audience.md"],
+                "path": f"content/{campaign_name}/market_research/"
+            },
+            "blog_creation": {
+                "files": ["ai-marketing-guide.md"],
+                "path": f"content/{campaign_name}/blogs/"
+            },
+            "blog_analysis": {
+                "files": ["strategic-optimization.md"],
+                "path": f"content/{campaign_name}/analysis/"
+            },
+            "blog_optimization": {
+                "files": ["optimized-ai-marketing-guide.md"],
+                "path": f"content/{campaign_name}/blogs/"
+            },
+            "distribution_content_creation": {
+                "files": ["posts_v1.md", "email-sequence_v1.md"],
+                "path": [f"content/{campaign_name}/social-media/", f"content/{campaign_name}/emails/"]
+            },
+            "distribution_content_analysis": {
+                "files": ["distribution_feedback.md"],
+                "path": f"content/{campaign_name}/analysis/"
+            },
+            "distribution_content_optimization": {
+                "files": ["posts_final.md", "email-sequence_final.md"],
+                "path": [f"content/{campaign_name}/social-media/", f"content/{campaign_name}/emails/"]
+            },
+            "audio_slogan": {
+                "files": ["slogans.md"],
+                "path": f"content/{campaign_name}/audio/"
+            },
+            "audio_slogan_analysis": {
+                "files": ["audio_slogan_feedback.md"],
+                "path": f"content/{campaign_name}/analysis/"
+            },
+            "final_report_assembly": {
+                "files": ["FINAL_CAMPAIGN_REPORT.md"],
+                "path": f"content/{campaign_name}/"
+            }
+        }
+        
+        for rule_name, rule in validation_rules.items():
+            if rule_name in task_name.lower():
+                files = rule["files"]
+                paths = rule["path"] if isinstance(rule["path"], list) else [rule["path"]]
+                
+                for i, file_name in enumerate(files):
+                    path = paths[i] if i < len(paths) else paths[0]
+                    full_path = os.path.join(path, file_name)
+                    
+                    if not os.path.exists(full_path):
+                        print(f"⚠️ VALIDATION FAILED: Missing file {full_path}")
+                        return False
+                    else:
+                        file_size = os.path.getsize(full_path)
+                        if file_size < 100:  # Minimum file size check
+                            print(f"⚠️ VALIDATION FAILED: File too small {full_path} ({file_size} bytes)")
+                            return False
+                        else:
+                            print(f"✅ VALIDATION PASSED: {full_path} ({file_size} bytes)")
+                
+                return True
+        
+        return True  # No specific validation rule found
 
     @crew
     def crew(self) -> Crew:
+        global CAMPAIGN_STATUS
+        
+        # Initialize campaign status
+        CAMPAIGN_STATUS["start_time"] = time.time()
+        CAMPAIGN_STATUS["last_update"] = time.time()
+        CAMPAIGN_STATUS["completed_tasks"] = []
+        CAMPAIGN_STATUS["progress"] = 0
+        CAMPAIGN_STATUS["current_task"] = "Initializing"
+        CAMPAIGN_STATUS["current_agent"] = "System"
+        CAMPAIGN_STATUS["task_status"] = "pending"
+        
         print("🧠 SOPHISTICATED MULTI-STAGE CAMPAIGN: 10-task iterative quality control workflow")
         print("📝 INTELLIGENT CAMPAIGN: Research → Blog Loop → Distribution Loop → Audio Loop → Assembly")
         print("🔄 QUALITY-OPTIMIZED: Create → Analyze → Optimize loops across ALL content types")
@@ -316,31 +419,33 @@ class Marketing():
                 self.campaign_manager()
             ],
             tasks=[
-                # Stage 1: Foundational Research
+                # Stage 1: Foundational Research - MUST CREATE 3 FILES
                 self.market_research_task(),
                 
-                # Stage 2: Core Content Iteration (Blog)
+                # Stage 2: Core Content Iteration (Blog) - MUST CREATE 1 BLOG + 1 ANALYSIS + 1 OPTIMIZED BLOG
                 self.blog_creation_task(),
                 self.blog_analysis_task(),
                 self.blog_optimization_task(),
                 
-                # Stage 3: Distribution Content Creation & Iteration
+                # Stage 3: Distribution Content Creation & Iteration - MUST CREATE 2 FILES + 1 ANALYSIS + 2 OPTIMIZED FILES
                 self.distribution_content_creation_task(),
                 self.distribution_content_analysis_task(),
                 self.distribution_content_optimization_task(),
                 
-                # Stage 4: Brand Content Creation & Iteration
+                # Stage 4: Brand Content Creation & Iteration - MUST CREATE 1 AUDIO + 1 ANALYSIS
                 self.audio_slogan_task(),
                 self.audio_slogan_analysis_task(),
                 
-                # Stage 5: Final Assembly & Review
+                # Stage 5: Final Assembly & Review - MUST CREATE 1 FINAL REPORT
                 self.final_report_assembly_task()
             ],
             process=Process.sequential,
             verbose=True,
-            max_rpm=30,
+            max_rpm=20,
             full_output=True,
-            max_execution_time=10800,
+            max_execution_time=14400,
             share_crew=False,
-            output_log_file="crew_execution.log"
+            output_log_file="crew_execution.log",
+            task_callback=self._task_callback,
+            step_callback=self._step_callback
         )

@@ -76,6 +76,15 @@ class FixedFileWriterTool(BaseTool):
             file_path = f"content/{campaign_name}/{subdir}/{original_filename}"
             print(f"⚠️ Reconstructed path from simple filename: {file_path}")
         
+        # Additional fix: Handle special characters in campaign names that cause path issues
+        # Replace problematic characters that might break file paths
+        file_path = file_path.replace("(", "").replace(")", "")
+        file_path = re.sub(r"[<>:\"|?*]", "", file_path)  # Remove invalid filename characters
+        file_path = re.sub(r"[^\w\s\-_./]", "", file_path)  # Keep only alphanumeric, spaces, hyphens, underscores, dots, and slashes
+        file_path = re.sub(r"\s+", "-", file_path)  # Replace spaces with hyphens
+        file_path = re.sub(r"-+", "-", file_path)  # Replace multiple hyphens with single
+        file_path = re.sub(r"/+", "/", file_path)  # Fix double slashes
+        
         print(f"📝 Final file_path: {file_path}")
         return file_path
 
@@ -83,7 +92,10 @@ class FixedFileWriterTool(BaseTool):
         """Write content to file with campaign name validation."""
         try:
             # Fix campaign name in file path
+            original_path = file_path
             file_path = self._validate_and_fix_campaign_name(file_path)
+            
+            print(f"🔧 Path transformation: '{original_path}' -> '{file_path}'")
             
             # Ensure we're in the marketing directory
             current_dir = os.getcwd()
@@ -103,28 +115,51 @@ class FixedFileWriterTool(BaseTool):
             if not os.path.isabs(file_path):
                 file_path = os.path.join(os.getcwd(), file_path)
             
+            print(f"📍 Final absolute path: {file_path}")
+            
             # Create directory structure if it doesn't exist
             directory = os.path.dirname(file_path)
-            Path(directory).mkdir(parents=True, exist_ok=True)
+            print(f"📂 Creating directory: {directory}")
+            
+            try:
+                Path(directory).mkdir(parents=True, exist_ok=True)
+                print(f"✅ Directory created successfully: {directory}")
+            except Exception as dir_error:
+                print(f"❌ Error creating directory {directory}: {str(dir_error)}")
+                return f"❌ Error creating directory '{directory}': {str(dir_error)}"
             
             # Check if file exists and handle overwrite
             if os.path.exists(file_path) and not overwrite:
                 return f"File '{file_path}' already exists and overwrite is disabled."
             
+            # Validate content
+            if not content or content.strip() == "":
+                print(f"⚠️ Warning: Empty content for file '{file_path}'")
+                content = "# Content not available\n\nThis file was created but no content was provided."
+            
             # Write content to file
+            print(f"📝 Writing {len(content)} characters to file...")
             with open(file_path, 'w', encoding='utf-8') as file:
                 file.write(content)
             
             # Verify file was created successfully
             if os.path.exists(file_path):
                 file_size = os.path.getsize(file_path)
+                print(f"✅ File verification passed: {file_path} ({file_size} bytes)")
                 return f"✅ Successfully wrote {file_size} bytes to '{file_path}'"
             else:
+                print(f"❌ File verification failed: {file_path}")
                 return f"❌ Failed to create file '{file_path}'"
                 
-        except PermissionError:
-            return f"❌ Permission denied writing to '{file_path}'"
-        except FileNotFoundError:
-            return f"❌ Directory path invalid for '{file_path}'"
+        except PermissionError as e:
+            error_msg = f"❌ Permission denied writing to '{file_path}': {str(e)}"
+            print(error_msg)
+            return error_msg
+        except FileNotFoundError as e:
+            error_msg = f"❌ Directory path invalid for '{file_path}': {str(e)}"
+            print(error_msg)
+            return error_msg
         except Exception as e:
-            return f"❌ Error writing file '{file_path}': {str(e)}" 
+            error_msg = f"❌ Error writing file '{file_path}': {str(e)}"
+            print(error_msg)
+            return error_msg 
