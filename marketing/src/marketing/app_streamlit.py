@@ -81,17 +81,75 @@ def create_directories(campaign_name):
         base_dir.mkdir(parents=True, exist_ok=True)
         return fallback_name
 
+def run_campaign_thread(inputs, progress_bar, status_text, agent_text, task_text, progress_text, time_text):
+    """Run the campaign in a separate thread to avoid blocking the UI"""
+    try:
+        # Validate and create directories
+        validated_campaign_name = create_directories(inputs['campaign_name'])
+        inputs['campaign_name'] = validated_campaign_name  # Update with validated name
+        os.environ["CAMPAIGN_NAME"] = validated_campaign_name
+        
+        # Initialize crew
+        crew_instance = Marketing()
+        
+        # Run the crew in a separate thread
+        result = crew_instance.crew().kickoff(inputs=inputs)
+        
+        # Update UI when complete
+        status_text.text("✅ Campaign completed successfully!")
+        progress_bar.progress(100)
+        
+        return True, inputs['campaign_name']
+        
+    except Exception as e:
+        logger.error(f"Campaign failed: {str(e)}", exc_info=True)
+        status_text.error(f"❌ Campaign failed: {str(e)}")
+        return False, None
+
+
+    """Update the UI with progress information"""
+    try:
+        while True:
+          
+            
+            # Update progress bar
+            progress_bar.progress(progress)
+            
+            # Update status text
+            if task_status == "completed":
+                status_text.text(f"✅ Completed: {current_task}")
+            elif task_status == "in_progress":
+                status_text.text(f"🔄 In Progress: {current_task}")
+            else:
+                status_text.text(f"⏳ Pending: {current_task}")
+                
+            # Update agent text
+            agent_text.text(f"👤 Current Agent: {current_agent}")
+            
+            # Update task text
+            task_text.text(f"📋 Current Task: {current_task}")
+            
+            
+            
+            # Sleep for a short time before updating again
+            time.sleep(1)
+            
+            # Exit if campaign is complete
+            if progress >= 100:
+                break
+    except Exception as e:
+        logger.error(f"Error updating progress UI: {str(e)}", exc_info=True)
+
 def run_campaign(inputs):
     """Run the campaign and update progress"""
     try:
-        # Initialize progress
+        # Initialize progress UI elements
         progress_bar = st.progress(0)
         status_text = st.empty()
         
         status_text.text("🚀 Initializing campaign...")
         progress_bar.progress(10)
         
-        # Validate and create directories
         validated_campaign_name = create_directories(inputs['campaign_name'])
         inputs['campaign_name'] = validated_campaign_name  # Update with validated name
         os.environ["CAMPAIGN_NAME"] = validated_campaign_name
@@ -118,6 +176,7 @@ def run_campaign(inputs):
         progress_bar.progress(100)
         
         return True, inputs['campaign_name']
+        
         
     except Exception as e:
         logger.error(f"Campaign failed: {str(e)}", exc_info=True)
@@ -360,7 +419,7 @@ def main():
     
     # Footer
     st.divider()
-    st.markdown("*Built with Streamlit and CrewAI for AI-powered marketing automation*")
+    st.markdown("*Built with ❤️ by Mohit*")
 
 if __name__ == "__main__":
     main() 
