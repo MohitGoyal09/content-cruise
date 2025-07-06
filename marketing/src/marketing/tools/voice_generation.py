@@ -34,7 +34,13 @@ class VoiceGenerationTool(BaseTool):
     def _run(self, text: str, language_code: str = "hi-IN", speaker: str = "amol") -> str:
         """Generate a voice for the given text with simple rate limiting."""
         
-        #
+        print(f"🎵 Voice Generation Request: '{text}' in {language_code} with speaker {speaker}")
+        
+        # Force Hindi language for slogans
+        if language_code != "hi-IN":
+            language_code = "hi-IN"
+            print(f"⚠️ Forcing Hindi language for audio generation: {language_code}")
+            
         valid_language_codes = ['bn-IN', 'en-IN', 'gu-IN', 'hi-IN', 'kn-IN', 'ml-IN', 'mr-IN', 'od-IN', 'pa-IN', 'ta-IN', 'te-IN']
         valid_speakers = ['meera', 'pavithra', 'maitreyi', 'arvind', 'amol', 'amartya', 'diya', 'neel', 'misha', 'vian', 'arjun', 'maya', 'anushka', 'abhilash', 'manisha', 'vidya', 'arya', 'karun', 'hitesh']
         
@@ -46,6 +52,7 @@ class VoiceGenerationTool(BaseTool):
             speaker = "anushka"  
             print(f"Warning: Invalid speaker provided. Using default: {speaker}")
         
+        print(f"🎵 Final audio settings: Language={language_code}, Speaker={speaker}")
         
         time.sleep(5)
         
