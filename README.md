@@ -12,7 +12,6 @@
 **🎯 THE PROBLEM**: Small businesses waste **$15,000+** and **80+ hours** creating marketing campaigns  
 **🚀 OUR SOLUTION**: **5 AI agents** create professional campaigns in **15 minutes** for **$0.95**
 
-**[🎥 LIVE DEMO](your-demo-link) • [🚀 TRY NOW](your-platform-link) • [📊 SAMPLE RESULTS](your-results-link)**
 
 </div>
 
@@ -23,26 +22,6 @@
 ### 🌍 **Massive Market Disruption**
 
 We're **revolutionizing the $400 BILLION marketing industry** by making enterprise-quality marketing campaigns accessible to **33 million small businesses** worldwide.
-
-<div align="center">
-
-```mermaid
-graph LR
-    subgraph "💸 BEFORE: Traditional Marketing"
-        A[💰 $15,000 Cost<br/>⏰ 6-12 Weeks<br/>👥 5-10 People<br/>📝 3-5 Assets<br/>❓ Variable Quality]
-    end
-    
-    subgraph "🚀 AFTER: Our AI Platform"
-        B[💰 $0.95 Cost<br/>⚡ 15 Minutes<br/>🤖 5 AI Agents<br/>📦 15+ Assets<br/>⭐ 90+ Quality Score]
-    end
-    
-    A -->|🔄 TRANSFORMATION| B
-    
-    style A fill:#FF6B6B,stroke:#333,stroke-width:2px,color:#fff
-    style B fill:#4ECDC4,stroke:#333,stroke-width:2px,color:#333
-```
-
-</div>
 
 ### 📈 **Revolutionary Performance Metrics**
 
@@ -156,10 +135,11 @@ Every campaign delivers a complete marketing portfolio including market research
 ### ⚡ **5-Minute Quick Start**
 
 ```bash
-# 1. Clone and setup (2 minutes)
-git clone https://github.com/your-username/deep-dive.git
+# 1. setup (2 minutes)
 cd deep-dive/marketing
 pip install -r requirements.txt
+or 
+uv sync
 
 # 2. Configure API keys (1 minute)
 export GOOGLE_API_KEY=your_gemini_key
@@ -176,28 +156,8 @@ streamlit run src/marketing/app_streamlit.py
 # Output: Complete marketing campaign with 15+ assets
 ```
 
-### 🎥 **Live Demonstration Access**
 
-<div align="center">
 
-[![🎥 WATCH DEMO](https://img.shields.io/badge/🎥-WATCH%20LIVE%20DEMO-red?style=for-the-badge&logo=youtube&logoColor=white)](your-demo-link)
-[![🚀 TRY PLATFORM](https://img.shields.io/badge/🚀-TRY%20PLATFORM%20NOW-green?style=for-the-badge&logo=rocket&logoColor=white)](your-platform-link)
-[![📊 VIEW RESULTS](https://img.shields.io/badge/📊-VIEW%20SAMPLE%20CAMPAIGNS-blue?style=for-the-badge&logo=chart-bar&logoColor=white)](your-results-link)
-
-**💡 Experience 5 AI agents creating a complete marketing campaign in real-time**
-
-</div>
-
-### 📋 **Demo Script for Judges (10 minutes)**
-
-1. **⚡ Setup Demo** (2 min): One-command platform launch + browser auto-open
-2. **🎯 Input Demo** (1 min): Campaign parameters input (topic, audience, budget, voice)
-3. **🤖 Agent Demo** (5 min): Watch 5 AI agents collaborate in real-time with progress tracking
-4. **📊 Results Demo** (2 min): Review 15+ generated files with quality scores
-
-**🎯 Sample Results**: 2,247-word blog (94 SEO score) + 52 keywords + 12 competitors + 16 social posts + 5 emails + Hindi audio
-
----
 
 ## 🏆 **REAL CAMPAIGN SUCCESS STORIES**
 
@@ -349,88 +309,7 @@ Localization Engine: Currency, dates, cultural norms adaptation
 
 ---
 
-## 📞 **JUDGE ACCESS & EVALUATION**
 
-### 🏆 **Hackathon Judge Portal**
-
-<div align="center">
-
-[![🏆 JUDGE ACCESS](https://img.shields.io/badge/🏆-JUDGE%20ACCESS%20PORTAL-gold?style=for-the-badge&logo=crown&logoColor=white)](your-judge-portal)
-
-**🚀 No setup required • ⚡ Instant access • 📊 Pre-loaded examples**
-
-</div>
-
-### 📋 **Complete Evaluation Package**
-
-| **📁 Resource** | **📋 Description** | **🔗 Access Link** |
-|----------------|-------------------|-------------------|
-| **🎥 Live Demo** | 10-minute platform walkthrough | [▶️ Watch Demo](your-demo-link) |
-| **🚀 Interactive Platform** | Hands-on platform experience | [🖱️ Try Now](your-platform-link) |
-| **📊 Sample Campaigns** | Generated campaign examples | [📁 View Results](your-results-link) |
-| **📋 Business Pitch** | Investment-ready presentation | [📈 View Deck](your-pitch-link) |
-| **💻 Source Code** | Complete technical implementation | [⚙️ GitHub Repo](your-repo-link) |
-| **📚 Documentation** | Comprehensive technical docs | [📖 Read Docs](./docs/README.md) |
-
-### 📧 **Contact & Support**
-
-**👨‍💻 Technical Team**: [tech@marketingai.com](mailto:tech@marketingai.com)  
-**💼 Business Team**: [business@marketingai.com](mailto:business@marketingai.com)  
-**🎥 Demo Requests**: [demo@marketingai.com](mailto:demo@marketingai.com)  
-**📱 Direct Line**: [+1-555-AI-MARKETING](tel:+15552462753)
-
----
-
-## 🏅 **HACKATHON WINNING CRITERIA ALIGNMENT**
-
-### ✅ **Innovation Excellence: 10/10**
-
-- **🥇 World's First**: Multi-agent marketing automation platform
-- **🚀 Technical Breakthrough**: 5-agent collaborative intelligence  
-- **🌍 Cultural Innovation**: Multilingual voice generation capability
-- **🔄 Quality Revolution**: Autonomous optimization loops
-
-### ✅ **Technical Implementation: 10/10**
-
-- **💻 Production Ready**: Fully functional end-to-end platform
-- **🏗️ Scalable Architecture**: Enterprise-grade microservices design
-- **⚡ Performance Excellence**: 99% speed improvement + 99% cost reduction
-- **🔒 Professional Quality**: Comprehensive error handling and monitoring
-
-### ✅ **Business Impact: 10/10**
-
-- **💰 Market Disruption**: $400B industry transformation potential
-- **🎯 Clear Value Proposition**: 99.99% cost reduction + consistent excellence
-- **📈 Massive TAM**: 33M+ businesses immediate addressable market
-- **🚀 Scalable Business Model**: SaaS with predictable revenue streams
-
-### ✅ **User Experience: 10/10**
-
-- **⚡ Instant Value**: 5-minute setup to first complete campaign
-- **🎯 Intuitive Design**: Accessible to technical and non-technical users
-- **📊 Real-time Feedback**: Live progress tracking and agent visualization
-- **🏆 Professional Output**: Publication-ready content without editing
-
-### ✅ **Presentation Excellence: 10/10**
-
-- **📚 Comprehensive Documentation**: Complete setup, usage, and technical guides
-- **🎥 Live Demonstration**: Real-time platform execution capability
-- **📊 Compelling Metrics**: Clear ROI, performance data, and business case
-- **🔮 Vision & Roadmap**: Credible path to unicorn status and industry transformation
-
----
-
-## 🎉 **THE FUTURE OF MARKETING IS HERE**
-
-The **AI Marketing Automation Platform** isn't just a tool—it's a **fundamental paradigm shift** that democratizes professional marketing for every business on the planet.
-
-### 🌟 **Why This Revolutionizes Everything**
-
-1. **🚀 Massive Industry Disruption**: 99.99% cost reduction in $400B market
-2. **💡 Technical Innovation Breakthrough**: World's first collaborative multi-agent marketing system
-3. **📈 Proven Market Demand**: 33M small businesses need affordable professional marketing
-4. **🌍 Global Impact Potential**: Breaking language and cultural barriers with AI
-5. **🏆 Immediate Business Value**: Publication-ready campaigns in 15 minutes
 
 ### 🦄 **The Vision: Democratizing Professional Marketing**
 
@@ -438,23 +317,15 @@ The **AI Marketing Automation Platform** isn't just a tool—it's a **fundamenta
 
 We're not just building a platform—we're **revolutionizing an entire industry** and creating the foundation for **AI-native marketing** in the next decade.
 
----
+
+
 
 <div align="center">
-
-**🏆 READY TO TRANSFORM THE MARKETING INDUSTRY? 🏆**
-
-**[⭐ STAR THIS PROJECT](https://github.com/your-username/deep-dive)** • **[🔄 SHARE WITH COMMUNITY](https://twitter.com/intent/tweet?text=Check%20out%20this%20revolutionary%20AI%20marketing%20platform!)** • **[🚀 JOIN THE REVOLUTION](your-platform-link)**
-
-[![GitHub stars](https://img.shields.io/github/stars/your-username/deep-dive?style=social)](https://github.com/your-username/deep-dive)
-[![Twitter Follow](https://img.shields.io/twitter/follow/yourhandle?style=social)](https://twitter.com/yourhandle)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=social&logo=linkedin)](https://linkedin.com/in/yourprofile)
-
-**Built with ❤️ and revolutionary AI for the democratization of professional marketing worldwide**
+<h4>Built with ❤️ and revolutionary AI for the democratization of professional marketing worldwide
 
 </div>
 
----
+
 
 ## 📖 **Additional Resources**
 
