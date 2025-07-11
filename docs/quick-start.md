@@ -35,7 +35,8 @@ By the end of this guide, you'll have a **complete professional marketing campai
 # For Linux/macOS
 source venv/bin/activate  # Linux/macOS
 .\venv\Scripts\activate  # Windows
-
+# Install dependencies
+uv sync
 # Move to the marketing directory
 cd marketing
 

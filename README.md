@@ -138,7 +138,8 @@ Every campaign delivers a complete marketing portfolio including market research
 # 1. Activate the virtual environment (1 minute)
 source venv/bin/activate  # Linux/macOS
 .\venv\Scripts\activate  # Windows
-
+# Install dependencies
+uv sync
 # Move to the marketing directory
 cd marketing
 
