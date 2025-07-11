@@ -1,3 +1,11 @@
-# Audience Research
+# Audience
 
-This file will be populated by the market research task.
+## Target Demographics
+- Small business owners
+- Marketing managers
+- Entrepreneurs
+
+## Key Interests
+- Increasing customer engagement
+- Improving marketing efficiency
+- Achieving higher ROI

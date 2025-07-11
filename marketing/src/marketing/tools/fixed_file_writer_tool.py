@@ -20,9 +20,48 @@ class FixedFileWriterTool(BaseTool):
     """
     args_schema: Type[BaseModel] = FixedFileWriterToolInput
 
+    def _validate_file_placement(self, file_path: str) -> None:
+        """Validate file placement to prevent common path errors."""
+        # Common error patterns to catch and prevent
+        critical_errors = []
+        
+        # Error 1: posts_v1.md in blogs folder instead of social-media
+        if "posts_v1.md" in file_path and "/blogs/" in file_path:
+            critical_errors.append("ERROR: posts_v1.md MUST be in social-media folder, NOT blogs folder!")
+        
+        # Error 2: posts_final.md in blogs folder instead of social-media
+        if "posts_final.md" in file_path and "/blogs/" in file_path:
+            critical_errors.append("ERROR: posts_final.md MUST be in social-media folder, NOT blogs folder!")
+        
+        # Error 3: Final files in root campaign directory instead of subfolders
+        if ("posts_final.md" in file_path or "email-sequence_final.md" in file_path):
+            # Check if file is in root directory (has campaign name but no subfolder)
+            if file_path.count("/") == 2 and file_path.endswith((".md", ".txt")):
+                critical_errors.append("ERROR: Final files MUST be in subfolders (social-media/, emails/), NOT root directory!")
+        
+        # Error 4: email files in wrong folder
+        if "email-sequence" in file_path and not "/emails/" in file_path:
+            critical_errors.append("ERROR: Email sequence files MUST be in emails folder!")
+        
+        # Error 5: Social media files in wrong folder
+        if ("posts_v1.md" in file_path or "posts_final.md" in file_path) and not "/social-media/" in file_path:
+            critical_errors.append("ERROR: Social media posts MUST be in social-media folder!")
+        
+        # If any critical errors found, log but don't raise exception (allow with warning)
+        if critical_errors:
+            error_message = "\n".join(critical_errors)
+            print(f"⚠️ FILE PLACEMENT WARNING:\n{error_message}")
+            print(f"⚠️ Attempting to fix path automatically...")
+            # Don't raise exception, let the path fixing logic handle it
+        else:
+            print(f"✅ File placement validation passed for: {file_path}")
+
     def _validate_and_fix_campaign_name(self, file_path: str) -> str:
         """Validate and fix campaign name in file path."""
         print(f"📝 Original file_path: {file_path}")
+        
+        # CRITICAL: Validate file placement to prevent common errors
+        self._validate_file_placement(file_path)
         
         # Check if path contains None, null, or empty campaign name
         if "/None/" in file_path or "/null/" in file_path or "//" in file_path:
@@ -59,30 +98,47 @@ class FixedFileWriterTool(BaseTool):
             # Determine appropriate subdirectory based on filename
             if "competitors" in file_path.lower() or "keywords" in file_path.lower() or "audience" in file_path.lower():
                 subdir = "market_research"
-            elif "blog" in file_path.lower() or "post" in file_path.lower():
-                subdir = "blogs"
-            elif "social" in file_path.lower() or "posts" in file_path.lower():
+            elif "analysis" in file_path.lower() or "feedback" in file_path.lower() or "optimization" in file_path.lower():
+                subdir = "analysis"
+            elif "posts_v1" in file_path.lower() or "posts_final" in file_path.lower() or "social" in file_path.lower():
                 subdir = "social-media"
-            elif "email" in file_path.lower():
+            elif "email-sequence" in file_path.lower() or "email" in file_path.lower():
                 subdir = "emails"
+            elif ("blog" in file_path.lower() or "guide" in file_path.lower() or "ai-marketing-guide" in file_path.lower()) and "social" not in file_path.lower():
+                subdir = "blogs"
             elif "audio" in file_path.lower() or "slogan" in file_path.lower():
                 subdir = "audio"
-            elif "analysis" in file_path.lower():
-                subdir = "analysis"
             else:
                 subdir = "misc"
-            
+                
             original_filename = os.path.basename(file_path)
+            
+            # Special handling for incorrect blog post names
+            if "blog_post.md" in file_path.lower():
+                print(f"⚠️ WARNING: Incorrect blog filename detected: {file_path}")
+                print(f"⚠️ Converting 'blog_post.md' to 'ai-marketing-guide.md' in blogs folder")
+                original_filename = "ai-marketing-guide.md"
+                subdir = "blogs"
             file_path = f"content/{campaign_name}/{subdir}/{original_filename}"
             print(f"⚠️ Reconstructed path from simple filename: {file_path}")
         
         # Additional fix: Handle special characters in campaign names that cause path issues
-        # Replace problematic characters that might break file paths
-        file_path = file_path.replace("(", "").replace(")", "")
-        file_path = re.sub(r"[<>:\"|?*]", "", file_path)  # Remove invalid filename characters
-        file_path = re.sub(r"[^\w\s\-_./]", "", file_path)  # Keep only alphanumeric, spaces, hyphens, underscores, dots, and slashes
-        file_path = re.sub(r"\s+", "-", file_path)  # Replace spaces with hyphens
-        file_path = re.sub(r"-+", "-", file_path)  # Replace multiple hyphens with single
+        # Only apply character cleaning to the campaign name part, not the entire path
+        path_parts = file_path.split('/')
+        
+        # Clean only non-path parts (avoid breaking Windows drive letters and path separators)
+        if len(path_parts) > 2:  # Only clean campaign names and filenames, not full paths
+            for i, part in enumerate(path_parts):
+                if i > 0 and part and not part.endswith(':'):  # Skip drive letters and first part
+                    # Replace problematic characters only in campaign/folder names
+                    part = part.replace("(", "").replace(")", "")
+                    part = re.sub(r"[<>\"|?*]", "", part)  # Remove invalid filename characters (keep : for Windows drives)
+                    part = re.sub(r"\s+", "-", part)  # Replace spaces with hyphens
+                    part = re.sub(r"-+", "-", part)  # Replace multiple hyphens with single
+                    path_parts[i] = part
+            
+            file_path = '/'.join(path_parts)
+        
         file_path = re.sub(r"/+", "/", file_path)  # Fix double slashes
         
         print(f"📝 Final file_path: {file_path}")

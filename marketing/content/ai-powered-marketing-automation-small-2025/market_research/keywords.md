@@ -1,3 +1,11 @@
-# Keywords Research
+# Keywords
 
-This file will be populated by the market research task.
+## Primary Keywords
+- AI-powered marketing
+- Marketing automation
+- Small business growth
+
+## Secondary Keywords
+- Digital marketing tools
+- Customer engagement
+- ROI optimization

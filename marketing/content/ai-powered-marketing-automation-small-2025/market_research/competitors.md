@@ -1,3 +1,11 @@
-# Competitors Research
+# Competitors
 
-This file will be populated by the market research task.
+## Direct Competitors
+
+- Company A
+- Company B
+
+## Indirect Competitors
+
+- Company C
+- Company D

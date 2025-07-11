@@ -2,3 +2,5 @@ User name is John Doe.
 User is an AI Engineer.
 User is interested in AI Agents.
 User is based in San Francisco, California.
+User prefers only Gemini and Groq models for AI tasks.
+User does not want other models like OpenAI to be used.

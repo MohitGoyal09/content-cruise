@@ -121,59 +121,10 @@ def run_campaign_thread(inputs, progress_bar, status_text, agent_text, task_text
         return False, None
 
 def manual_status_update_thread():
-    """Manual status updates independent of callbacks"""
-    global CAMPAIGN_STATUS
-    
-    # Predefined task sequence for manual updates
-    task_sequence = [
-        ("Market Research & Intelligence", "Market Strategist", 15),
-        ("Blog Content Creation", "Content Creator", 25), 
-        ("Blog Performance Analysis", "Performance Analyst", 35),
-        ("Blog Content Optimization", "Content Creator", 45),
-        ("Distribution Content Creation", "Content Creator", 55),
-        ("Distribution Content Analysis", "Performance Analyst", 65),
-        ("Distribution Content Optimization", "Content Creator", 75),
-        ("Audio Slogan Creation", "Brand Voice Specialist", 85),
-        ("Audio Slogan Analysis", "Performance Analyst", 90),
-        ("Final Campaign Assembly", "Campaign Manager", 100)
-    ]
-    
-    start_time = time.time()
-    task_index = 0
-    
-    while task_index < len(task_sequence):
-        try:
-            elapsed = time.time() - start_time
-            
-            # Each task should take about 5-8 minutes on average
-            # Switch tasks every 6 minutes (360 seconds) for testing
-            if elapsed > (task_index + 1) * 360:  # 6 minutes per task
-                if task_index < len(task_sequence) - 1:
-                    task_index += 1
-            
-            task_name, agent_name, progress = task_sequence[task_index]
-            
-            # Update status
-            CAMPAIGN_STATUS["current_task"] = task_name
-            CAMPAIGN_STATUS["current_agent"] = agent_name  
-            CAMPAIGN_STATUS["task_status"] = "in_progress"
-            CAMPAIGN_STATUS["progress"] = min(progress, int((elapsed / 3600) * 100))  # 1 hour total
-            CAMPAIGN_STATUS["last_update"] = time.time()
-            
-            # Save to JSON
-            try:
-                with open("campaign_status.json", "w") as f:
-                    json.dump(CAMPAIGN_STATUS, f)
-            except:
-                pass
-                
-            print(f"🔄 Manual Update: {task_name} by {agent_name} ({CAMPAIGN_STATUS['progress']}%)")
-            
-            time.sleep(10)  # Update every 10 seconds
-            
-        except Exception as e:
-            print(f"Error in manual status thread: {str(e)}")
-            time.sleep(10)
+    """Disabled manual status updates - now handled by crew callbacks"""
+    # This function is disabled to prevent conflicts with crew callbacks
+    # Status updates are now handled properly by the crew's task and step callbacks
+    pass
 
 def run_campaign(inputs):
     """Run the campaign and update progress"""
@@ -220,9 +171,6 @@ def run_campaign(inputs):
         with concurrent.futures.ThreadPoolExecutor() as executor:
             future = executor.submit(run_crew)
             
-            # Start manual status update thread
-            status_future = executor.submit(manual_status_update_thread)
-            
             # Update UI in real-time while crew is running
             start_time = time.time()
             while not future.done():
@@ -236,8 +184,7 @@ def run_campaign(inputs):
                     progress = CAMPAIGN_STATUS.get("progress", 0)
                     task_status = CAMPAIGN_STATUS.get("task_status", "pending")
                     
-                    # Debug logging
-                    print(f"🔄 UI Update - Task: {current_task}, Agent: {current_agent}, Progress: {progress}%, Status: {task_status}")
+                    # Silent UI updates without debug spam
                     
                     # Update UI elements
                     progress_bar.progress(max(20, progress))
@@ -269,7 +216,6 @@ def run_campaign(inputs):
                                     current_agent = json_status.get("current_agent", current_agent)
                                     progress = json_status.get("progress", progress)
                                     task_status = json_status.get("task_status", task_status)
-                                    print(f"📁 Using JSON status: {current_task} by {current_agent}")
                                     
                                     # Update UI with JSON data
                                     progress_bar.progress(max(20, progress))
@@ -277,16 +223,15 @@ def run_campaign(inputs):
                                     current_agent_text.text(f"👤 Agent: {current_agent}")
                                     current_task_text.text(f"📋 Task: {current_task}")
                                     progress_text.text(f"📊 Progress: {progress}%")
-                    except Exception as json_error:
-                        print(f"Error reading JSON status: {str(json_error)}")
+                    except Exception:
+                        pass
                     
-                    # Update every 3 seconds (increased from 2 to reduce noise)
-                    time.sleep(3)
+                    # Update every 15 seconds to reduce terminal spam
+                    time.sleep(15)
                     
-                except Exception as update_error:
-                    logger.error(f"Error updating UI: {str(update_error)}")
-                    print(f"❌ UI Update Error: {str(update_error)}")
-                    time.sleep(3)
+                except Exception:
+                    # Silent error handling to avoid terminal spam
+                    time.sleep(15)
             
             # Get the result
             result = future.result()

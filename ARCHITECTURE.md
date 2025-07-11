@@ -151,7 +151,7 @@ Responsibilities:
 
 ## 🔄 Workflow Design
 
-### 10-Stage Sequential Pipeline
+### 12-Stage Sequential Pipeline
 
 The system implements a sophisticated **create → analyze → optimize** workflow pattern:
 
@@ -162,7 +162,7 @@ Market Research Task
 ├── Competitive Analysis (competitors.md)
 ├── Keyword Strategy (keywords.md)
 └── Audience Insights (audience.md)
-Duration: ~3 minutes | Cost: ~$0.15
+Duration: ~3 minutes | Agent: Market Strategist
 ```
 
 #### Stage 2-4: Content Creation Loop (Blog)
@@ -172,7 +172,7 @@ Blog Creation → Analysis → Optimization
 ├── Blog Creation (1500+ words, SEO-optimized)
 ├── Performance Analysis (SEO, conversion, quality)
 └── Blog Optimization (implementing recommendations)
-Duration: ~7 minutes | Cost: ~$0.35
+Duration: ~7 minutes | Agents: Content Creator, Performance Analyst
 ```
 
 #### Stage 5-7: Distribution Content Loop
@@ -182,7 +182,7 @@ Distribution Creation → Analysis → Optimization
 ├── Social Media + Email Creation
 ├── Distribution Performance Analysis
 └── Distribution Content Optimization
-Duration: ~4 minutes | Cost: ~$0.25
+Duration: ~4 minutes | Agents: Content Creator, Performance Analyst
 ```
 
 #### Stage 8-9: Brand Content Loop
@@ -191,7 +191,7 @@ Duration: ~4 minutes | Cost: ~$0.25
 Audio Content → Analysis
 ├── Slogan Creation + Voice Generation
 └── Brand Voice Analysis
-Duration: ~3 minutes | Cost: ~$0.15
+Duration: ~3 minutes | Agents: Brand Voice Specialist, Performance Analyst
 ```
 
 #### Stage 10: Final Assembly
@@ -199,7 +199,7 @@ Duration: ~3 minutes | Cost: ~$0.15
 ```
 Campaign Assembly
 └── Executive Report + Implementation Roadmap
-Duration: ~2 minutes | Cost: ~$0.05
+Duration: ~2 minutes | Agent: Campaign Manager
 ```
 
 ### Intelligent Task Dependencies
@@ -382,8 +382,8 @@ content/{campaign-name}/
 
 ```python
 # Task-specific model assignment
-coordination_tasks = mistral_llm      # $0.002 per 1K tokens
-creative_tasks = gemini_llm          # $0.0075 per 1K tokens
+coordination_tasks = mistral_llm      # Optimized for coordination and analysis
+creative_tasks = gemini_llm          # High-quality content generation
 analysis_tasks = mistral_llm         # Efficient for structured analysis
 ```
 
