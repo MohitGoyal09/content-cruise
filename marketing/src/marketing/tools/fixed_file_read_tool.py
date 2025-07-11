@@ -51,21 +51,17 @@ class FixedFileReadTool(BaseTool):
             with open(file_path, 'r', encoding='utf-8') as file:
                 lines = file.readlines()
             
-            # Handle start_line (convert to 0-based indexing)
             start_idx = (start_line - 1) if start_line is not None and start_line > 0 else 0
-            start_idx = max(0, start_idx)  # Ensure non-negative
+            start_idx = max(0, start_idx)
             
-            # Handle line_count
             if line_count is not None and line_count > 0:
                 end_idx = start_idx + line_count
                 selected_lines = lines[start_idx:end_idx]
             else:
-                # Read from start_idx to end of file
                 selected_lines = lines[start_idx:]
             
             content = ''.join(selected_lines)
             
-            # Provide informative response
             total_lines = len(lines)
             lines_read = len(selected_lines)
             

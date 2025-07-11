@@ -135,11 +135,12 @@ Every campaign delivers a complete marketing portfolio including market research
 ### ⚡ **5-Minute Quick Start**
 
 ```bash
-# 1. setup (2 minutes)
-cd deep-dive/marketing
-pip install -r requirements.txt
-or 
-uv sync
+# 1. Activate the virtual environment (1 minute)
+source venv/bin/activate  # Linux/macOS
+.\venv\Scripts\activate  # Windows
+
+# Move to the marketing directory
+cd marketing
 
 # 2. Configure API keys (1 minute)
 export GOOGLE_API_KEY=your_gemini_key

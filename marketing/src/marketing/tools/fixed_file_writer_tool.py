@@ -122,19 +122,16 @@ class FixedFileWriterTool(BaseTool):
             file_path = f"content/{campaign_name}/{subdir}/{original_filename}"
             print(f"⚠️ Reconstructed path from simple filename: {file_path}")
         
-        # Additional fix: Handle special characters in campaign names that cause path issues
-        # Only apply character cleaning to the campaign name part, not the entire path
         path_parts = file_path.split('/')
         
-        # Clean only non-path parts (avoid breaking Windows drive letters and path separators)
-        if len(path_parts) > 2:  # Only clean campaign names and filenames, not full paths
+        if len(path_parts) > 2:
             for i, part in enumerate(path_parts):
-                if i > 0 and part and not part.endswith(':'):  # Skip drive letters and first part
-                    # Replace problematic characters only in campaign/folder names
+                if i > 0 and part and not part.endswith(':'):  
+                    
                     part = part.replace("(", "").replace(")", "")
-                    part = re.sub(r"[<>\"|?*]", "", part)  # Remove invalid filename characters (keep : for Windows drives)
-                    part = re.sub(r"\s+", "-", part)  # Replace spaces with hyphens
-                    part = re.sub(r"-+", "-", part)  # Replace multiple hyphens with single
+                    part = re.sub(r"[<>\"|?*]", "", part)  
+                    part = re.sub(r"\s+", "-", part)  
+                    part = re.sub(r"-+", "-", part)  
                     path_parts[i] = part
             
             file_path = '/'.join(path_parts)

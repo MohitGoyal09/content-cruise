@@ -10,7 +10,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 from crew import Marketing
 
-# Enhanced logging setup
+
 logging.basicConfig(level=logging.INFO, 
                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                    handlers=[logging.StreamHandler()])
@@ -18,13 +18,13 @@ logger = logging.getLogger(__name__)
 
 def simple_rate_limit_delay():
     """Simple delay to prevent rate limiting"""
-    time.sleep(5)  # 5 second delay between operations
+    time.sleep(5)  
 
 def generate_campaign_name(topic, target_audience):
     """Generate a clean campaign name from topic and audience"""
     # Create URL-friendly campaign name
     topic_clean = topic.lower().replace(" ", "-").replace("'", "")
-    audience_clean = target_audience.split()[0].lower()  # Take first word of audience
+    audience_clean = target_audience.split()[0].lower()  
     current_year = datetime.now().year
     
     campaign_name = f"{topic_clean}-{audience_clean}-{current_year}"
@@ -41,9 +41,9 @@ def create_directories(campaign_name):
     
    
     subdirs = [
-        "market_research",  # For competitor, keyword, audience analysis
-        "blogs",           # For blog posts (original and optimized)
-        "analysis",        # For improvement recommendations
+        "market_research",  
+        "blogs",          
+        "analysis",       
         "social-media",    
         "emails",         
         "audio"            

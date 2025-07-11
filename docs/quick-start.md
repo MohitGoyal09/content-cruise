@@ -27,35 +27,23 @@ By the end of this guide, you'll have a **complete professional marketing campai
 
 ## 🚀 **5-Minute Setup Process**
 
-### ⏱️ **Step 1: Environment Setup (2 minutes)**
 
-#### **1.1 Clone the Repository**
 
+#### **Activate Virtual Environment**
 ```bash
-# Clone the project
-git clone https://github.com/your-username/deep-dive.git
-cd deep-dive/marketing
+# Activate virtual environment
+# For Linux/macOS
+source venv/bin/activate  # Linux/macOS
+.\venv\Scripts\activate  # Windows
 
-# Verify you're in the right directory
-ls -la
-# You should see: src/, pyproject.toml, README.md
+# Move to the marketing directory
+cd marketing
+
+# Run the application
+streamlit run src/marketing/app_streamlit.py
 ```
 
-#### **1.2 Install Dependencies**
-
-```bash
-# Install Python dependencies (using pip)
-pip install -r requirements.txt
-
-# OR using uv (faster)
-pip install uv
-uv sync
-
-# OR using poetry (if you prefer)
-poetry install
-```
-
-**🎯 Success Indicator**: No error messages, all packages installed successfully
+**🎯 Success Indicator**: Sucessfully activated environment, no errors
 
 ---
 
